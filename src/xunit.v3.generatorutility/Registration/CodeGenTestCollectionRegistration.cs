@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -44,6 +45,11 @@ namespace Xunit.Generators
 		/// other test collections.
 		/// </summary>
 		public bool DisableParallelization { get; set; }
+
+		/// <summary>
+		/// Options which determine the amount of parallelization to allow for this test collection.
+		/// </summary>
+		public int? ParallelismOptions { get; set; }
 
 		/// <summary>
 		/// Gets the factory for the collection-level test case orderer.
@@ -139,6 +145,7 @@ namespace Xunit.Generators
 			ComparerHelper.Equal(collectionFixtures, other.collectionFixtures) &&
 			ComparerHelper.Equal(collectionType, other.collectionType) &&
 			ComparerHelper.Equal(DisableParallelization, other.DisableParallelization) &&
+			ComparerHelper.Equal(ParallelismOptions, other.ParallelismOptions) &&
 			ComparerHelper.Equal(TestCaseOrdererFactory, other.TestCaseOrdererFactory) &&
 			ComparerHelper.Equal(TestClassOrdererFactory, other.TestClassOrdererFactory) &&
 			ComparerHelper.Equal(TestMethodOrdererFactory, other.TestMethodOrdererFactory) &&
@@ -182,6 +189,7 @@ $@"global::Xunit.v3.RegisteredEngineConfig.RegisterCodeGenTestCollectionTrait({n
 				.With(collectionFixtures)
 				.With(collectionType)
 				.With(DisableParallelization)
+				.With(ParallelismOptions)
 				.With(TestCaseOrdererFactory)
 				.With(TestClassOrdererFactory)
 				.With(TestMethodOrdererFactory)
@@ -195,7 +203,9 @@ $@"global::Xunit.v3.RegisteredEngineConfig.RegisterCodeGenTestCollectionTrait({n
 				initValues.Add($"ClassFixtureFactories = {classFixtures.ToFixtureFactories()}");
 			if (collectionFixtures.Count != 0)
 				initValues.Add($"CollectionFixtureFactories = {collectionFixtures.ToFixtureFactories()}");
-			if (DisableParallelization)
+			if (ParallelismOptions.HasValue)
+				initValues.Add($"ParallelismOptions = ({nameof(ParallelismOptions)}){ParallelismOptions}");
+			else if (DisableParallelization)
 				initValues.Add("DisableParallelization = true");
 			if (TestCaseOrdererFactory != null)
 				initValues.Add($"TestCaseOrdererFactory = () => {TestCaseOrdererFactory}");

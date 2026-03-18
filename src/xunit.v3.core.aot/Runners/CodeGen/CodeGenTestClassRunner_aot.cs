@@ -54,6 +54,7 @@ public class CodeGenTestClassRunner : CoreTestClassRunner<CodeGenTestClassRunner
 	/// <param name="aggregator">The exception aggregator used to run code and collect exceptions.</param>
 	/// <param name="cancellationTokenSource">The task cancellation token source, used to cancel the test run.</param>
 	/// <param name="collectionFixtureMappings">The mapping of collection fixture types to fixtures.</param>
+	/// <param name="parallelismOptions">Options which determine the amount of test parallelization to allow.</param>
 	public async ValueTask<RunSummary> Run(
 		ICodeGenTestClass testClass,
 		IReadOnlyCollection<ICodeGenTestCase> testCases,
@@ -61,7 +62,8 @@ public class CodeGenTestClassRunner : CoreTestClassRunner<CodeGenTestClassRunner
 		IMessageBus messageBus,
 		ExceptionAggregator aggregator,
 		CancellationTokenSource cancellationTokenSource,
-		FixtureMappingManager collectionFixtureMappings)
+		FixtureMappingManager collectionFixtureMappings,
+		ParallelismOptions parallelismOptions = ParallelismOptionsAliases.Default)
 	{
 		Guard.ArgumentNotNull(testClass);
 		Guard.ArgumentNotNull(testCases);
@@ -76,7 +78,8 @@ public class CodeGenTestClassRunner : CoreTestClassRunner<CodeGenTestClassRunner
 			messageBus,
 			aggregator,
 			cancellationTokenSource,
-			collectionFixtureMappings
+			collectionFixtureMappings,
+			parallelismOptions
 		);
 		await ctxt.InitializeAsync();
 

@@ -12,6 +12,7 @@ namespace Xunit.v3;
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="classFixtureMappings">The mapping of class fixture types to fixtures.</param>
+/// <param name="parallelismOptions">Options which determine the amount of test parallelization to allow.</param>
 public class CodeGenTestMethodRunnerContext(
 	ICodeGenTestMethod testMethod,
 	IReadOnlyCollection<ICodeGenTestCase> testCases,
@@ -19,8 +20,9 @@ public class CodeGenTestMethodRunnerContext(
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
-	FixtureMappingManager classFixtureMappings) :
-		CoreTestMethodRunnerContext<ICodeGenTestMethod, ICodeGenTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
+	FixtureMappingManager classFixtureMappings,
+	ParallelismOptions parallelismOptions) :
+		CoreTestMethodRunnerContext<ICodeGenTestMethod, ICodeGenTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, parallelismOptions, cancellationTokenSource)
 {
 	/// <summary>
 	/// Gets the mapping manager for method-level fixtures.
@@ -40,6 +42,7 @@ public class CodeGenTestMethodRunnerContext(
 			CancellationTokenSource,
 			Aggregator.Clone(),
 			ExplicitOption,
-			MethodFixtureMappings
+			MethodFixtureMappings,
+			ParallelismOptions
 		);
 }

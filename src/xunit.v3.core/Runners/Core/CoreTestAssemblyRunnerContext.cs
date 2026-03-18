@@ -31,14 +31,17 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 			where TTestCollection : class, ICoreTestCollection
 			where TTestCase : class, ICoreTestCase
 {
-	SemaphoreSlim? parallelSemaphore;
 	MaxConcurrencySyncContext? syncContext;
 
 	/// <summary>
-	/// Gets a flag which indicates whether the user has requested that parallelization be disabled.
+	/// Gets options which determine the amount of parallelization to allow for tests in this assembly by default.
 	/// </summary>
-	public virtual bool DisableParallelization =>
-		ExecutionOptions.DisableParallelization() ?? TestAssembly.DisableParallelization ?? false;
+	/// <remarks>
+	/// Overridden by <see cref="CollectionDefinitionAttribute.ParallelismOptions"/> within collections, unless
+	/// set to <see cref="ParallelismOptions.None"/>. In which case, all tests in the assembly will be run serially.
+	/// </remarks>
+	public virtual ParallelismOptions ParallelismOptions =>
+		ExecutionOptions.ParallelismOptions() ?? TestAssembly.ParallelismOptions ?? ParallelismOptionsAliases.Default;
 
 	/// <summary>
 	/// Gets a flag which indicates how explicit tests should be handled.
@@ -68,6 +71,11 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 			_ => ParallelAlgorithm.Conservative,  // implicit invalid value validation/conversion to default
 		};
 
+	/// <summary>
+	/// Gets the semaphore used to limit the number of tests running in parallel.
+	/// </summary>
+	public SemaphoreSlim? ParallelizationSemaphore { get; private set; }
+
 	/// <inheritdoc/>
 	public override string TargetFramework =>
 		TestAssembly.TargetFramework;
@@ -90,9 +98,9 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 				"{0} [{1}, {2}]",
 				base.TestEnvironment,
 				GetTestCollectionFactoryDisplayName(),
-				DisableParallelization
+				ParallelismOptions == ParallelismOptions.None
 					? "non-parallel"
-					: string.Format(CultureInfo.CurrentCulture, "parallel ({0})", threadCountText)
+					: string.Format(CultureInfo.CurrentCulture, "parallel {0} ({1})", ParallelismOptions, threadCountText)
 			);
 		}
 	}
@@ -100,16 +108,29 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 	/// <summary>
 	/// To be called after the test collection has been executed.
 	/// </summary>
-	public void AfterTestCollection() =>
-		parallelSemaphore?.Release();
+	public void AfterTestCollection(TTestCollection testCollection)
+	{
+		Guard.ArgumentNotNull(testCollection);
+		var collectionParallelism = ParallelismOptions.DetermineParallelismOptions(testCollection.ParallelismOptions);
+		if (collectionParallelism.RunsTestsWithinCollectionSerially())
+		{
+			ParallelizationSemaphore?.Release();
+		}
+	}
 
 	/// <summary>
 	/// To be called before executing a test collection.
 	/// </summary>
-	public async ValueTask BeforeTestCollection()
+	public async ValueTask BeforeTestCollection(TTestCollection testCollection)
 	{
-		if (parallelSemaphore is not null)
-			await parallelSemaphore.WaitAsync(TestContext.Current.CancellationToken);
+		Guard.ArgumentNotNull(testCollection);
+		if (ParallelizationSemaphore != null && ParallelismOptions
+				.DetermineParallelismOptions(testCollection.ParallelismOptions).RunsTestsWithinCollectionSerially())
+		{
+			// acquire parallelization semaphore at the collection level when running the collection's tests serially
+			// to avoid creating too many tasks for other collections unnecessarily
+			await ParallelizationSemaphore.WaitAsync(TestContext.Current.CancellationToken);
+		}
 	}
 
 	/// <inheritdoc/>
@@ -122,7 +143,7 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 		else if (syncContext is IDisposable disposable)
 			disposable.SafeDispose();
 
-		parallelSemaphore?.Dispose();
+		ParallelizationSemaphore?.SafeDispose();
 
 		await base.DisposeAsync();
 	}
@@ -165,7 +186,7 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 		// that the .NET Thread Pool has enough threads based on the user's requested maximum
 		else
 		{
-			parallelSemaphore = new(initialCount: maxParallelThreads);
+			ParallelizationSemaphore = new(initialCount: maxParallelThreads);
 
 			ThreadPool.GetMinThreads(out var workerThreads, out var completionPortThreads);
 			var threadFloor = Math.Min(4, maxParallelThreads);

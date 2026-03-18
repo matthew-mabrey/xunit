@@ -2,6 +2,7 @@ using Xunit;
 using Xunit.Runner.Common;
 using Xunit.Runner.v3;
 using Xunit.Sdk;
+using Xunit.v3;
 
 public static class Xunit3ArgumentFactoryTests
 {
@@ -260,7 +261,7 @@ public static class Xunit3ArgumentFactoryTests
 				assertEquivalentMaxDepth: 5,
 				culture: culture,
 				diagnosticMessages: true,
-				disableParallelization: true,
+				parallelismOptions: ParallelismOptions.None,
 				explicitOption: ExplicitOption.On,
 				failSkips: true,
 				failTestsWithWarnings: true,
@@ -300,7 +301,7 @@ public static class Xunit3ArgumentFactoryTests
 				arg => Assert.Equal("-methodDisplayOptions", arg),
 				arg => Assert.Equal("UseOperatorMonikers,ReplacePeriodWithComma", arg),
 				arg => Assert.Equal("-parallel", arg),
-				arg => Assert.Equal("none", arg),
+				arg => Assert.Equal("None", arg),
 				arg => Assert.Equal("-parallelAlgorithm", arg),
 				arg => Assert.Equal("Conservative", arg),
 				arg => Assert.Equal("-preEnumerateTheories", arg),
@@ -498,7 +499,7 @@ public static class Xunit3ArgumentFactoryTests
 				assertEquivalentMaxDepth: 5,
 				culture: culture,
 				diagnosticMessages: true,
-				disableParallelization: true,
+				parallelismOptions: ParallelismOptions.None,
 				explicitOption: ExplicitOption.On,
 				failSkips: true,
 				failTestsWithWarnings: true,
@@ -536,7 +537,7 @@ public static class Xunit3ArgumentFactoryTests
 				arg => Assert.Equal("-maxThreads", arg),
 				arg => Assert.Equal("42", arg),
 				arg => Assert.Equal("-parallel", arg),
-				arg => Assert.Equal("none", arg),
+				arg => Assert.Equal("None", arg),
 				arg => Assert.Equal("-parallelAlgorithm", arg),
 				arg => Assert.Equal("Conservative", arg),
 				arg => Assert.Equal("-printMaxEnumerableLength", arg),

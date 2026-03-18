@@ -1,3 +1,5 @@
+using Xunit.Sdk;
+
 namespace Xunit;
 
 /// <summary>
@@ -28,12 +30,42 @@ public sealed class CollectionDefinitionAttribute : Attribute
 		Name = Guard.ArgumentNotNull(name);
 
 	/// <summary>
-	/// Determines whether tests in this collection runs in parallel with any other collections.
+	/// Gets or sets a flag which indicates whether this collection should not run in parallel with other collections in the assembly.
 	/// </summary>
-	public bool DisableParallelization { get; set; }
+	public bool DisableParallelization
+	{
+		get => OptionalParallelismOptions == ParallelismOptions.None;
+		set
+		{
+			if (value)
+			{
+				OptionalParallelismOptions = ParallelismOptions.None;
+			}
+		}
+	}
 
 	/// <summary>
-	/// Gets the collection defintion name, if one was provided.
+	/// Gets or sets the parallelism options to use for this test collection. If not set, <see cref="ParallelismOptionsAliases.Default"/> is used.
+	/// </summary>
+	public ParallelismOptions ParallelismOptions
+	{
+		get => OptionalParallelismOptions ?? ParallelismOptionsAliases.Default;
+		set
+		{
+			OptionalParallelismOptions = value;
+		}
+	}
+
+	/// <summary>
+	/// Gets the collection definition name, if one was provided.
 	/// </summary>
 	public string? Name { get; }
+
+	/// <summary>
+	/// Gets or sets the parallelism options to use for this test collection, or null if none have been specified.
+	/// </summary>
+	/// <remarks>
+	/// Required since attribute properties cannot be nullable and the assembly options should be used when undefined.
+	/// </remarks>
+	public ParallelismOptions? OptionalParallelismOptions { get; set; }
 }
