@@ -343,6 +343,23 @@ public class AssemblyRunnerOptions
 	}
 
 	/// <summary>
+	/// Indicates whether to run all test cases in parallel.
+	/// </summary>
+	/// <remarks>
+	/// <em>Parallelized test cases are only valid for xUnit.net v3 test projects.</em>
+	/// </remarks>
+	public bool? ParallelizeTestCases
+	{
+		get => ProjectAssembly.Configuration.ParallelizeTestCases;
+		set
+		{
+			GuardMinimumXunitVersion(3, value, nameof(ParallelizeTestCases));
+
+			ProjectAssembly.Configuration.ParallelizeTestCases = value;
+		}
+	}
+
+	/// <summary>
 	/// Set to influence the maximum length when printing collections.
 	/// </summary>
 	/// <remarks>

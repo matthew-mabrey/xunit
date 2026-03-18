@@ -9,17 +9,29 @@ namespace Xunit.v3;
 /// <param name="messageBus">The message bus to send execution messages to</param>
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
+/// <param name="parallelizationSemaphore">The semaphore used to limit test case parallelization.</param>
 public class ContextBase(
 	ExplicitOption explicitOption,
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
-	CancellationTokenSource cancellationTokenSource) :
+	CancellationTokenSource cancellationTokenSource,
+	SemaphoreSlim? parallelizationSemaphore = null) :
 		IAsyncLifetime
 {
 	/// <summary>
 	/// Gets the aggregator used for reporting exceptions.
 	/// </summary>
 	public ExceptionAggregator Aggregator { get; } = aggregator;
+
+	/// <summary>
+	/// Gets a value indicating whether test case parallelization is enabled.
+	/// </summary>
+	public bool TestCaseParallelizationEnabled { get; }
+
+	/// <summary>
+	/// Gets the semaphore used to limit parallelization within the execution pipeline.
+	/// </summary>
+	public SemaphoreSlim? ParallelizationSemaphore { get; } = parallelizationSemaphore;
 
 	/// <summary>
 	/// Gets the cancellation token source used for cancelling test execution.

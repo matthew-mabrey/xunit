@@ -42,6 +42,11 @@ public interface IXunitTestCollection : ICoreTestCollection
 	IReadOnlyCollection<Type> CollectionFixtureTypes { get; }
 
 	/// <summary>
+	/// Determines whether tests in this collection run in parallel.
+	/// </summary>
+	bool EnableTestCaseParallelization { get; }
+
+	/// <summary>
 	/// Gets the test assembly this test collection belongs to.
 	/// </summary>
 	new IXunitTestAssembly TestAssembly { get; }

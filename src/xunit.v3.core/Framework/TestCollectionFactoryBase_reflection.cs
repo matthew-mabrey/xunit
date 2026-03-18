@@ -22,8 +22,8 @@ public abstract class TestCollectionFactoryBase(IXunitTestAssembly testAssembly)
 
 	IXunitTestCollection CreateCollection(ICollectionAttribute attribute) =>
 		TestAssembly.CollectionDefinitions.TryGetValue(attribute.Name, out var definition)
-			? new XunitTestCollection(TestAssembly, definition.Type, definition.Attribute.DisableParallelization, attribute.Name)
-			: new XunitTestCollection(TestAssembly, attribute.Type, disableParallelization: false, attribute.Name);
+			? new XunitTestCollection(TestAssembly, definition.Type, definition.Attribute.DisableParallelization, definition.Attribute.EnableTestCaseParallelization, attribute.Name)
+			: new XunitTestCollection(TestAssembly, attribute.Type, disableParallelization: false, enableTestCaseParallelization: false, attribute.Name);
 
 	/// <inheritdoc/>
 	public IXunitTestCollection Get(Type testClass)

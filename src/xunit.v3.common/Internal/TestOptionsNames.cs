@@ -172,6 +172,15 @@ public static class TestOptionsNames
 		public static readonly string DisableParallelization = "xunit.execution.DisableParallelization";
 
 		/// <summary>
+		/// Set to <see langword="true"/> to enable test case parallelization within all test collections by default.
+		/// </summary>
+		/// <remarks>
+		/// Value type: <see cref="bool"/><br/>
+		/// Consumed by: v3
+		/// </remarks>
+		public static readonly string EnableTestCaseParallelization = "xunit.execution.EnableTestCaseParallelization";
+
+		/// <summary>
 		/// Gets a flag which indicates the user's desire to run explicit tests.
 		/// </summary>
 		/// <remarks>

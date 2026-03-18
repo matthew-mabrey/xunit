@@ -12,6 +12,7 @@ namespace Xunit.v3;
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="beforeAfterTestAttributes">The <see cref="IBeforeAfterTestAttribute"/>s that are applied to the test</param>
 /// <param name="constructorArguments">The constructor arguments for the test class</param>
+/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
 /// </remarks>
@@ -22,6 +23,7 @@ public class XunitTestRunnerContext(
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
 	IReadOnlyCollection<IBeforeAfterTestAttribute> beforeAfterTestAttributes,
-	object?[] constructorArguments) :
-		XunitTestRunnerBaseContext<IXunitTest>(test, messageBus, explicitOption, aggregator, cancellationTokenSource, beforeAfterTestAttributes, constructorArguments)
+	object?[] constructorArguments,
+	SemaphoreSlim? parallelizationSemaphore = null) :
+		XunitTestRunnerBaseContext<IXunitTest>(test, messageBus, explicitOption, aggregator, cancellationTokenSource, beforeAfterTestAttributes, constructorArguments, parallelizationSemaphore)
 { }

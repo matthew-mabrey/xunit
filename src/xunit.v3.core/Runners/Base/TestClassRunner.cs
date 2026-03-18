@@ -307,6 +307,8 @@ public abstract class TestClassRunner<TContext, TTestClass, TTestMethod, TTestCa
 	/// <param name="exception">The exception that was caused during startup; should be used as an indicator that the
 	/// downstream tests should fail with the provided exception rather than going through standard execution</param>
 	/// <returns>Returns summary information about the tests that were run</returns>
+	[SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly",
+		Justification = "We guarantee that parallel ValueTasks are only awaited once.")]
 	protected virtual async ValueTask<RunSummary> RunTestMethods(
 		TContext ctxt,
 		Exception? exception)
@@ -314,18 +316,34 @@ public abstract class TestClassRunner<TContext, TTestClass, TTestMethod, TTestCa
 		Guard.ArgumentNotNull(ctxt);
 
 		var summary = new RunSummary();
+		var taskRunner = TestPipelineTaskRunner.Create(ctxt.CancellationTokenSource.Token);
+		List<ValueTask<RunSummary>>? parallel = null;
+
 		var orderedTestMethods = exception is null ? OrderTestMethods(ctxt) : OrderTestMethodsDefault(ctxt);
 
 		foreach (var testMethod in orderedTestMethods)
 		{
-			if (exception is not null)
-				summary.Aggregate(await FailTestMethod(ctxt, testMethod.Method, testMethod.TestCases, exception));
+			ValueTask<RunSummary> task() =>
+				exception == null
+					? RunTestMethod(ctxt, testMethod.Method, testMethod.TestCases)
+					: FailTestMethod(ctxt, testMethod.Method, testMethod.TestCases, exception);
+
+			if (ctxt.TestCaseParallelizationEnabled)
+				(parallel ??= []).Add(taskRunner(task));
 			else
-				summary.Aggregate(await RunTestMethod(ctxt, testMethod.Method, testMethod.TestCases));
+				summary.Aggregate(await task());
 
 			if (ctxt.CancellationTokenSource.IsCancellationRequested)
 				break;
 		}
+
+		if (parallel?.Count > 0)
+			foreach (var task in parallel)
+				try
+				{
+					summary.Aggregate(await task);
+				}
+				catch (TaskCanceledException) { }
 
 		return summary;
 	}

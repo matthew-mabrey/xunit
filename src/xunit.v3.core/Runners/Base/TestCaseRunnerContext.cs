@@ -10,6 +10,7 @@ namespace Xunit.v3;
 /// <param name="messageBus">The message bus to send execution messages to</param>
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
+/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <typeparam name="TTestCase">The type of the test case used by the test framework. Must
 /// derive from <see cref="ITestCase"/>.</typeparam>
 /// <typeparam name="TTest">The type of the test that is generated from the test case. Must
@@ -19,8 +20,9 @@ public abstract class TestCaseRunnerContext<TTestCase, TTest>(
 	ExplicitOption explicitOption,
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
-	CancellationTokenSource cancellationTokenSource) :
-		TestCaseRunnerBaseContext<TTestCase>(testCase, explicitOption, messageBus, aggregator, cancellationTokenSource)
+	CancellationTokenSource cancellationTokenSource,
+	SemaphoreSlim? parallelizationSemaphore = null) :
+		TestCaseRunnerBaseContext<TTestCase>(testCase, explicitOption, messageBus, aggregator, cancellationTokenSource, parallelizationSemaphore)
 			where TTestCase : class, ITestCase
 			where TTest : class, ITest
 {
