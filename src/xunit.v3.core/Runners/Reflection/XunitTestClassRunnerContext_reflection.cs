@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading;
 using Xunit.Sdk;
 
 namespace Xunit.v3;
@@ -21,10 +19,9 @@ public class XunitTestClassRunnerContext(
 	IReadOnlyCollection<IXunitTestCase> testCases,
 	ExplicitOption explicitOption,
 	IMessageBus messageBus,
-	ITestCaseOrderer testCaseOrderer,
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
 	FixtureMappingManager collectionFixtureMappings,
 	SemaphoreSlim? parallelizationSemaphore = null) :
-	XunitTestClassRunnerBaseContext<IXunitTestClass, IXunitTestCase>(testClass, testCases, explicitOption, messageBus, testCaseOrderer, aggregator, cancellationTokenSource, collectionFixtureMappings, parallelizationSemaphore)
+	XunitTestClassRunnerBaseContext<IXunitTestClass, IXunitTestMethod, IXunitTestCase>(testClass, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource, collectionFixtureMappings, parallelizationSemaphore)
 { }

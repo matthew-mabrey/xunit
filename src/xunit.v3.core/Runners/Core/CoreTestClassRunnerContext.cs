@@ -26,8 +26,9 @@ public abstract class CoreTestClassRunnerContext<TTestClass, TTestMethod, TTestC
 	ExplicitOption explicitOption,
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
-	CancellationTokenSource cancellationTokenSource) :
-		TestClassRunnerContext<TTestClass, TTestCase>(testClass, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
+	CancellationTokenSource cancellationTokenSource,
+	SemaphoreSlim? parallelizationSemaphore = null) :
+		TestClassRunnerContext<TTestClass, TTestCase>(testClass, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource, parallelizationSemaphore)
 			where TTestClass : class, ICoreTestClass
 			where TTestMethod : class, ICoreTestMethod
 			where TTestCase : class, ICoreTestCase

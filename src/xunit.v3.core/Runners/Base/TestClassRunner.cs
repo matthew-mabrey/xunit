@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Xunit.Sdk;
+using Xunit.v3.Utility;
 
 namespace Xunit.v3;
 
