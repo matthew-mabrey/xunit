@@ -24,12 +24,11 @@ public class XunitTestCollectionRunnerContext(
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
-	FixtureMappingManager assemblyFixtureMappings,
-	SemaphoreSlim? parallelizationSemaphore = null) :
-		XunitTestCollectionRunnerBaseContext<IXunitTestCollection, IXunitTestClass, IXunitTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource, assemblyFixtureMappings, parallelizationSemaphore)
+	FixtureMappingManager assemblyFixtureMappings) :
+		XunitTestCollectionRunnerBaseContext<IXunitTestCollection, IXunitTestClass, IXunitTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource, assemblyFixtureMappings)
 {
 	/// <summary>
-	/// Please use <see cref="XunitTestCollectionRunnerContext(IXunitTestCollection, IReadOnlyCollection{IXunitTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager, SemaphoreSlim?)"/>.
+	/// Please use <see cref="XunitTestCollectionRunnerContext(IXunitTestCollection, IReadOnlyCollection{IXunitTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager)"/>.
 	/// This overload will be removed in the next major version.
 	/// </summary>
 	[Obsolete("Please use the constructor which accepts testClassOrderer and testMethodOrderer. This overload will be removed in the next major version.")]

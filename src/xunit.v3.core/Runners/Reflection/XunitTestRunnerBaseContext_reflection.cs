@@ -26,7 +26,6 @@ public class XunitTestRunnerBaseContext<TTest> : CoreTestRunnerContext<TTest, IB
 	/// <param name="cancellationTokenSource">The cancellation token source</param>
 	/// <param name="beforeAfterTestAttributes">The <see cref="IBeforeAfterTestAttribute"/>s that are applied to the test</param>
 	/// <param name="constructorArguments">The constructor arguments for the test class</param>
-	/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 	public XunitTestRunnerBaseContext(
 		TTest test,
 		IMessageBus messageBus,
@@ -34,9 +33,8 @@ public class XunitTestRunnerBaseContext<TTest> : CoreTestRunnerContext<TTest, IB
 		ExceptionAggregator aggregator,
 		CancellationTokenSource cancellationTokenSource,
 		IReadOnlyCollection<IBeforeAfterTestAttribute> beforeAfterTestAttributes,
-		object?[] constructorArguments,
-		SemaphoreSlim? parallelizationSemaphore = null) :
-			base(Guard.ArgumentNotNull(test), messageBus, test.SkipReason, explicitOption, aggregator, cancellationTokenSource, parallelizationSemaphore)
+		object?[] constructorArguments) :
+			base(Guard.ArgumentNotNull(test), messageBus, test.SkipReason, explicitOption, aggregator, cancellationTokenSource)
 	{
 		BeforeAfterTestAttributes = Guard.ArgumentNotNull(beforeAfterTestAttributes);
 		ConstructorArguments = Guard.ArgumentNotNull(constructorArguments);

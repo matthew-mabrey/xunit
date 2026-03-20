@@ -38,7 +38,7 @@ public class XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>(
 	public override ValueTask<RunSummary> RunTestCase(TTestCase testCase)
 	{
 		if (testCase is ISelfExecutingXunitTestCase selfExecutingTestCase)
-			return selfExecutingTestCase.Run(ExplicitOption, MessageBus, ConstructorArguments, Aggregator.Clone(), CancellationTokenSource, ParallelizationSemaphore);
+			return selfExecutingTestCase.Run(ExplicitOption, MessageBus, ConstructorArguments, Aggregator.Clone(), CancellationTokenSource);
 
 		return XunitRunnerHelper.RunXunitTestCase(
 			testCase,

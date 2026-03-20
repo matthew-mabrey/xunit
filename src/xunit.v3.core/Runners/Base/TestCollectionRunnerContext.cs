@@ -10,8 +10,8 @@ namespace Xunit.v3;
 /// <param name="explicitOption">The user's choice on how to treat explicit tests</param>
 /// <param name="messageBus">The message bus to send execution messages to</param>
 /// <param name="aggregator">The exception aggregator</param>
-/// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="parallelizationSemaphore">The semaphore used to limit test case parallelization.</param>
+/// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <typeparam name="TTestCollection">The type of the test collection used by the test framework.
 /// Must derive from <see cref="ITestCollection"/>.</typeparam>
 /// <typeparam name="TTestCase">The type of the test case used by the test framework. Must

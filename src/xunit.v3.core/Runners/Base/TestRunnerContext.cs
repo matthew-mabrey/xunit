@@ -14,16 +14,14 @@ namespace Xunit.v3;
 /// <param name="explicitOption">The user's choice on how to treat explicit tests</param>
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
-/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 public class TestRunnerContext<TTest>(
 	TTest test,
 	IMessageBus messageBus,
 	string? skipReason,
 	ExplicitOption explicitOption,
 	ExceptionAggregator aggregator,
-	CancellationTokenSource cancellationTokenSource,
-	SemaphoreSlim? parallelizationSemaphore = null) :
-		TestRunnerBaseContext<TTest>(test, messageBus, skipReason, explicitOption, aggregator, cancellationTokenSource, parallelizationSemaphore)
+	CancellationTokenSource cancellationTokenSource) :
+		TestRunnerBaseContext<TTest>(test, messageBus, skipReason, explicitOption, aggregator, cancellationTokenSource)
 			where TTest : class, ITest
 {
 #if XUNIT_AOT
