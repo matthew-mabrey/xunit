@@ -687,18 +687,6 @@ public static class TestFrameworkOptionsReadWriteExtensions
 	}
 
 	/// <summary>
-	/// Sets a flag to enable test case parallelization within all test collections by default.
-	/// </summary>
-	public static void SetEnableTestCaseParallelization(
-		this ITestFrameworkExecutionOptions executionOptions,
-		bool? value)
-	{
-		Guard.ArgumentNotNull(executionOptions);
-
-		executionOptions.SetValue(TestOptionsNames.Execution.EnableTestCaseParallelization, value);
-	}
-
-	/// <summary>
 	/// Sets a flag to describe how explicit tests should be handled.
 	/// </summary>
 	public static void SetExplicitOption(

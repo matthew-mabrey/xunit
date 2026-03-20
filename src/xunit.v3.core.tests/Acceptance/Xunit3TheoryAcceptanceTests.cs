@@ -24,7 +24,7 @@ public partial class Xunit3TheoryAcceptanceTests
 			Assert.Contains("Xunit3TheoryAcceptanceTests+ClassDataTests+DataSource_ClassDisposable.Dispose", diagnosticMessages);
 		}
 
-		/*[Fact]
+		[Fact]
 		public async ValueTask ClassAsyncDisposable_DisposesOfClass()
 		{
 #if XUNIT_AOT
@@ -39,7 +39,7 @@ public partial class Xunit3TheoryAcceptanceTests
 			var diagnosticMessages = messageSink.Messages.OfType<IDiagnosticMessage>().Select(dm => dm.Message).ToArray();
 			Assert.Contains("Xunit3TheoryAcceptanceTests+ClassDataTests+DataSource_ClassAsyncDisposable.InitializeAsync", diagnosticMessages);
 			Assert.Contains("Xunit3TheoryAcceptanceTests+ClassDataTests+DataSource_ClassAsyncDisposable.DisposeAsync", diagnosticMessages);
-		}*/
+		}
 	}
 
 #if !NETFRAMEWORK

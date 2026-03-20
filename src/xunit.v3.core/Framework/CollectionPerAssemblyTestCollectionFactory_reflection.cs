@@ -20,7 +20,6 @@ public class CollectionPerAssemblyTestCollectionFactory : TestCollectionFactoryB
 				testAssembly,
 				collectionDefinition: null,
 				disableParallelization: false,
-				enableTestCaseParallelization: false,
 				"Test collection for " + TestAssembly.AssemblyName
 			);
 

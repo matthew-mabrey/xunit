@@ -88,7 +88,6 @@ public static partial class TestData
 		string? culture = null,
 		bool? diagnosticMessages = null,
 		bool? disableParallelization = null,
-		bool? enableTestCaseParallelization = null,
 		ExplicitOption? explicitOption = null,
 		bool? failSkips = null,
 		bool? failTestsWithWarnings = null,
@@ -110,7 +109,6 @@ public static partial class TestData
 		result.SetCulture(culture);
 		result.SetDiagnosticMessages(diagnosticMessages);
 		result.SetDisableParallelization(disableParallelization);
-		result.SetEnableTestCaseParallelization(enableTestCaseParallelization);
 		result.SetExplicitOption(explicitOption);
 		result.SetFailSkips(failSkips);
 		result.SetFailTestsWithWarnings(failTestsWithWarnings);

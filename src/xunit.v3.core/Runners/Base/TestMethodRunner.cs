@@ -1,5 +1,4 @@
 using Xunit.Sdk;
-using Xunit.v3.Utility;
 
 namespace Xunit.v3;
 
@@ -252,8 +251,6 @@ public abstract class TestMethodRunner<TContext, TTestMethod, TTestCase>
 	/// <param name="exception">The exception that was caused during startup; should be used as an indicator that the
 	/// downstream tests should fail with the provided exception rather than going through standard execution</param>
 	/// <returns>Returns summary information about the tests that were run.</returns>
-	[SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly",
-		Justification = "We guarantee that parallel ValueTasks are only awaited once.")]
 	protected virtual async ValueTask<RunSummary> RunTestCases(
 		TContext ctxt,
 		Exception? exception)
@@ -262,30 +259,17 @@ public abstract class TestMethodRunner<TContext, TTestMethod, TTestCase>
 
 		var summary = new RunSummary();
 		var orderedTestCases = OrderTestCases(ctxt);
-		var taskRunner = TestPipelineTaskRunner.Create(ctxt.CancellationTokenSource.Token);
-		List<ValueTask<RunSummary>>? parallel = null;
 
 		foreach (var testCase in orderedTestCases)
 		{
-			ValueTask<RunSummary> task() =>
-				exception == null ? RunTestCase(ctxt, testCase) : FailTestCase(ctxt, testCase, exception);
-
-			if (ctxt.TestCaseParallelizationEnabled)
-				(parallel ??= []).Add(taskRunner(task));
+			if (exception is not null)
+				summary.Aggregate(await FailTestCase(ctxt, testCase, exception));
 			else
-				summary.Aggregate(await task());
+				summary.Aggregate(await RunTestCase(ctxt, testCase));
 
 			if (ctxt.CancellationTokenSource.IsCancellationRequested)
 				break;
 		}
-
-		if (parallel?.Count > 0)
-			foreach (var task in parallel)
-				try
-				{
-					summary.Aggregate(await task);
-				}
-				catch (TaskCanceledException) { }
 
 		return summary;
 	}

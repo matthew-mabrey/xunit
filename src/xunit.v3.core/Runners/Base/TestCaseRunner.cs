@@ -1,5 +1,4 @@
 using Xunit.Sdk;
-using Xunit.v3.Utility;
 
 namespace Xunit.v3;
 
@@ -50,8 +49,6 @@ public abstract class TestCaseRunner<TContext, TTestCase, TTest> :
 		TTest test);
 
 	/// <inheritdoc/>
-	[SuppressMessage("Reliability", "CA2012:Use ValueTasks correctly",
-		Justification = "We guarantee that parallel ValueTasks are only awaited once.")]
 	protected override async ValueTask<RunSummary> RunTestCase(
 		TContext ctxt,
 		Exception? exception)
@@ -59,31 +56,17 @@ public abstract class TestCaseRunner<TContext, TTestCase, TTest> :
 		Guard.ArgumentNotNull(ctxt);
 
 		var summary = new RunSummary();
-		var taskRunner = TestPipelineTaskRunner.Create(ctxt.CancellationTokenSource.Token);
-		List<ValueTask<RunSummary>>? parallel = null;
 
 		foreach (var test in ctxt.Tests)
 		{
-			ValueTask<RunSummary> task() => exception is null
-				? RunTest(ctxt, test)
-				: FailTest(ctxt, test, exception);
-
-			if (ctxt.TestCaseParallelizationEnabled)
-				(parallel ??= []).Add(taskRunner(task));
+			if (exception is not null)
+				summary.Aggregate(await FailTest(ctxt, test, exception));
 			else
-				summary.Aggregate(await task());
+				summary.Aggregate(await RunTest(ctxt, test));
 
 			if (ctxt.CancellationTokenSource.IsCancellationRequested)
 				break;
 		}
-
-		if (parallel?.Count > 0)
-			foreach (var task in parallel)
-				try
-				{
-					summary.Aggregate(await task);
-				}
-				catch (TaskCanceledException) { }
 
 		return summary;
 	}

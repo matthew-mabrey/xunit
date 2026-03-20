@@ -315,8 +315,7 @@ public class XunitTestMethodRunnerTests
 				IMessageBus messageBus,
 				object?[] constructorArguments,
 				ExceptionAggregator aggregator,
-				CancellationTokenSource cancellationTokenSource,
-				SemaphoreSlim? parallelizationSemaphore = null) =>
+				CancellationTokenSource cancellationTokenSource) =>
 					new(XunitRunnerHelper.SkipTestCases(messageBus, cancellationTokenSource, [this], "This is skipped via self-execution"));
 		}
 	}

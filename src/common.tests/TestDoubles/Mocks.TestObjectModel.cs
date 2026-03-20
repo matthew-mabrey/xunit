@@ -512,7 +512,6 @@ partial class Mocks
 
 	public static ICoreTestCollection CoreTestCollection(
 		bool disableParallelization = false,
-		bool enableTestCaseParallelization = false,
 		ICoreTestAssembly? testAssembly = null,
 		ITestCaseOrderer? testCaseOrderer = null,
 		ITestClassOrderer? testClassOrderer = null,
@@ -524,7 +523,6 @@ partial class Mocks
 			new MockCoreTestCollection
 			{
 				DisableParallelization = disableParallelization,
-				EnableTestCaseParallelization = enableTestCaseParallelization,
 				TestAssembly = testAssembly ?? CoreTestAssembly(),
 				TestCaseOrderer = testCaseOrderer,
 				TestClassOrderer = testClassOrderer,
@@ -538,7 +536,6 @@ partial class Mocks
 	class MockCoreTestCollection : ICoreTestCollection
 	{
 		public required bool DisableParallelization { get; set; }
-		public required bool EnableTestCaseParallelization { get; set; }
 		public required ICoreTestAssembly TestAssembly { get; set; }
 		public required ITestCaseOrderer? TestCaseOrderer { get; set; }
 		public required ITestClassOrderer? TestClassOrderer { get; set; }

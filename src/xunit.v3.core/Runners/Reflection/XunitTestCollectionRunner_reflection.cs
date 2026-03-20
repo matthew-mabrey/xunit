@@ -60,7 +60,6 @@ public class XunitTestCollectionRunner :
 	/// <param name="aggregator">The exception aggregator used to run code and collection exceptions.</param>
 	/// <param name="cancellationTokenSource">The task cancellation token source, used to cancel the test run.</param>
 	/// <param name="assemblyFixtureMappings">The mapping manager for assembly fixtures.</param>
-	/// <param name="parallelizationSemaphore">The semaphore used to limit test case parallelization.</param>
 	public async ValueTask<RunSummary> Run(
 		IXunitTestCollection testCollection,
 		IReadOnlyCollection<IXunitTestCase> testCases,
@@ -68,8 +67,7 @@ public class XunitTestCollectionRunner :
 		IMessageBus messageBus,
 		ExceptionAggregator aggregator,
 		CancellationTokenSource cancellationTokenSource,
-		FixtureMappingManager assemblyFixtureMappings,
-		SemaphoreSlim? parallelizationSemaphore = null)
+		FixtureMappingManager assemblyFixtureMappings)
 	{
 		Guard.ArgumentNotNull(testCollection);
 		Guard.ArgumentNotNull(testCases);
@@ -84,8 +82,7 @@ public class XunitTestCollectionRunner :
 			messageBus,
 			aggregator,
 			cancellationTokenSource,
-			assemblyFixtureMappings,
-			parallelizationSemaphore
+			assemblyFixtureMappings
 		);
 		await ctxt.InitializeAsync();
 

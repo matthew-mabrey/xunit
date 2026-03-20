@@ -387,118 +387,106 @@ public abstract class TestRunnerBase<TContext, TTest>
 	{
 		Guard.ArgumentNotNull(ctxt);
 
-		if (ctxt.ParallelizationSemaphore != null)
-		{
-			await ctxt.ParallelizationSemaphore.WaitAsync(ctxt.CancellationTokenSource.Token);
-		}
+		SetTestContext(ctxt, TestEngineStatus.Initializing, dispose: false);
+
+		var summary = new RunSummary();
+		var output = string.Empty;
+		var warnings = default(string[]);
+		var attachments = default(IReadOnlyDictionary<string, TestAttachment>);
+		var elapsedTime = TimeSpan.Zero;
+
+		if (!await ctxt.Aggregator.RunAsync(() => OnTestStarting(ctxt), true))
+			await ctxt.CancellationTokenSource.CancelAsync();
+
+		var @continue = true;
+		TestResultState? resultState = null;
+
+#if !XUNIT_AOT
+		var logEnabled = TestEventSource.Log.IsEnabled();
+
+		if (logEnabled)
+			TestEventSource.Log.TestStart(ctxt.Test.TestDisplayName);
+#endif
 
 		try
 		{
-			SetTestContext(ctxt, TestEngineStatus.Initializing, dispose: false);
+			SetTestContext(ctxt, TestEngineStatus.Running, dispose: true);
 
-			var summary = new RunSummary();
-			var output = string.Empty;
-			var warnings = default(string[]);
-			var attachments = default(IReadOnlyDictionary<string, TestAttachment>);
-			var elapsedTime = TimeSpan.Zero;
+			if (!ctxt.CancellationTokenSource.IsCancellationRequested)
+			{
+				var shouldRun = true;
+				if (!ctxt.Aggregator.HasExceptions)
+					shouldRun = ctxt.Aggregator.Run(() => ShouldTestRun(ctxt), true);
 
-			if (!await ctxt.Aggregator.RunAsync(() => OnTestStarting(ctxt), true))
+				// When we don't pass an exception, we're looking for statically skipped test, so we
+				// won't try to run something we suspect will fail
+				var skipReason = ctxt.GetSkipReason(exception: null);
+
+				if (!ctxt.Aggregator.HasExceptions && shouldRun && skipReason is null)
+					elapsedTime += await ctxt.Aggregator.RunAsync(() => RunTest(ctxt), TimeSpan.Zero);
+
+				output = await ctxt.Aggregator.RunAsync(() => GetTestOutput(ctxt), string.Empty);
+				warnings = await ctxt.Aggregator.RunAsync(() => GetWarnings(ctxt), null);
+				attachments = await ctxt.Aggregator.RunAsync(() => GetAttachments(ctxt), null);
+
+				summary.Total = 1;
+				summary.Time = (decimal)elapsedTime.TotalSeconds;
+
+				var exception = ctxt.Aggregator.ToException();
+
+				// We re-ask for skip reason to allow dynamic skip via exception, even though we
+				// don't define what that means at this level. We let the context and/or derived
+				// runner classes to provide that definition for us.
+				skipReason = ctxt.GetSkipReason(exception);
+
+				ctxt.Aggregator.Clear();
+
+				if (!shouldRun)
+				{
+					summary.NotRun = 1;
+					(@continue, resultState) = await ctxt.Aggregator.RunAsync(() => OnTestNotRun(ctxt, output, warnings), (true, TestResultState.ForNotRun()));
+				}
+				else if (skipReason is not null)
+				{
+					summary.Skipped = 1;
+					(@continue, resultState) = await ctxt.Aggregator.RunAsync(() => OnTestSkipped(ctxt, skipReason, 0m, output, warnings), (true, TestResultState.ForSkipped()));
+				}
+				else if (exception is not null)
+				{
+					summary.Failed = 1;
+					(@continue, resultState) = await ctxt.Aggregator.RunAsync(() => OnTestFailed(ctxt, exception, summary.Time, output, warnings), (true, TestResultState.FromException(summary.Time, exception)));
+				}
+				else
+					(@continue, resultState) = await ctxt.Aggregator.RunAsync(() => OnTestPassed(ctxt, summary.Time, output, warnings), (true, TestResultState.ForPassed(summary.Time)));
+			}
+
+			if (!@continue)
 				await ctxt.CancellationTokenSource.CancelAsync();
 
-			var @continue = true;
-			TestResultState? resultState = null;
+			resultState ??= TestResultState.ForNotRun();
 
-	#if !XUNIT_AOT
-		var logEnabled = TestEventSource.Log.IsEnabled();
+			SetTestContext(ctxt, TestEngineStatus.CleaningUp, dispose: true, resultState);
 
-			if (logEnabled)
-				TestEventSource.Log.TestStart(ctxt.Test.TestDisplayName);
-#endif
-
-			try
-			{
-				SetTestContext(ctxt, TestEngineStatus.Running, dispose: true);
-
-				if (!ctxt.CancellationTokenSource.IsCancellationRequested)
-				{
-					var shouldRun = true;
-					if (!ctxt.Aggregator.HasExceptions)
-						shouldRun = ctxt.Aggregator.Run(() => ShouldTestRun(ctxt), true);
-
-					// When we don't pass an exception, we're looking for statically skipped test, so we
-					// won't try to run something we suspect will fail
-					var skipReason = ctxt.GetSkipReason(exception: null);
-
-					if (!ctxt.Aggregator.HasExceptions && shouldRun && skipReason is null)
-						elapsedTime += await ctxt.Aggregator.RunAsync(() => RunTest(ctxt), TimeSpan.Zero);
-
-					output = await ctxt.Aggregator.RunAsync(() => GetTestOutput(ctxt), string.Empty);
-					warnings = await ctxt.Aggregator.RunAsync(() => GetWarnings(ctxt), null);
-					attachments = await ctxt.Aggregator.RunAsync(() => GetAttachments(ctxt), null);
-
-					summary.Total = 1;
-					summary.Time = (decimal)elapsedTime.TotalSeconds;
-
-					var exception = ctxt.Aggregator.ToException();
-
-					// We re-ask for skip reason to allow dynamic skip via exception, even though we
-					// don't define what that means at this level. We let the context and/or derived
-					// runner classes to provide that definition for us.
-					skipReason = ctxt.GetSkipReason(exception);
-
-					ctxt.Aggregator.Clear();
-
-					if (!shouldRun)
-					{
-						summary.NotRun = 1;
-						(@continue, resultState) = await ctxt.Aggregator.RunAsync(() => OnTestNotRun(ctxt, output, warnings), (true, TestResultState.ForNotRun()));
-					}
-					else if (skipReason is not null)
-					{
-						summary.Skipped = 1;
-						(@continue, resultState) = await ctxt.Aggregator.RunAsync(() => OnTestSkipped(ctxt, skipReason, 0m, output, warnings), (true, TestResultState.ForSkipped()));
-					}
-					else if (exception is not null)
-					{
-						summary.Failed = 1;
-						(@continue, resultState) = await ctxt.Aggregator.RunAsync(() => OnTestFailed(ctxt, exception, summary.Time, output, warnings), (true, TestResultState.FromException(summary.Time, exception)));
-					}
-					else
-						(@continue, resultState) = await ctxt.Aggregator.RunAsync(() => OnTestPassed(ctxt, summary.Time, output, warnings), (true, TestResultState.ForPassed(summary.Time)));
-				}
-
-				if (!@continue)
-					await ctxt.CancellationTokenSource.CancelAsync();
-
-				resultState ??= TestResultState.ForNotRun();
-
-				SetTestContext(ctxt, TestEngineStatus.CleaningUp, dispose: true, resultState);
-
-				if (!await ctxt.Aggregator.RunAsync(() => OnTestFinished(ctxt, summary.Time, output, warnings, attachments), true))
-					await ctxt.CancellationTokenSource.CancelAsync();
+			if (!await ctxt.Aggregator.RunAsync(() => OnTestFinished(ctxt, summary.Time, output, warnings, attachments), true))
+				await ctxt.CancellationTokenSource.CancelAsync();
 		}
 		finally
 		{
 #if !XUNIT_AOT
-				if (logEnabled && resultState is not null)
-					TestEventSource.Log.TestStop(ctxt.Test.TestDisplayName, resultState.Result);
-	#endif
+			if (logEnabled && resultState is not null)
+				TestEventSource.Log.TestStop(ctxt.Test.TestDisplayName, resultState.Result);
+#endif
 		}
 
-			if (ctxt.Aggregator.HasExceptions)
-				if (!await ctxt.Aggregator.RunAsync(() => OnError(ctxt, ctxt.Aggregator.ToException()!), true))
-					await ctxt.CancellationTokenSource.CancelAsync();
+		if (ctxt.Aggregator.HasExceptions)
+			if (!await ctxt.Aggregator.RunAsync(() => OnError(ctxt, ctxt.Aggregator.ToException()!), true))
+				await ctxt.CancellationTokenSource.CancelAsync();
 
-			ctxt.Aggregator.Clear();
+		ctxt.Aggregator.Clear();
 
-			TestContext.CurrentInternal.SafeDispose();
+		TestContext.CurrentInternal.SafeDispose();
 
-			return summary;
-		}
-		finally
-		{
-			ctxt.ParallelizationSemaphore?.Release();
-		}
+		return summary;
 	}
 
 	/// <summary>

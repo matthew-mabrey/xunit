@@ -9,13 +9,11 @@ public static partial class Mocks
 	public static ICollectionBehaviorAttribute CollectionBehaviorAttribute(
 		CollectionBehavior collectionBehavior,
 		bool disableTestParallelization = false,
-		bool enableTestCaseParallelization = false,
 		int maxParallelThreads = 0,
 		ParallelAlgorithm parallelAlgorithm = ParallelAlgorithm.Conservative) =>
 			CollectionBehaviorAttribute(
 				collectionBehavior == CollectionBehavior.CollectionPerClass ? typeof(CollectionPerClassTestCollectionFactory) : typeof(CollectionPerAssemblyTestCollectionFactory),
 				disableTestParallelization,
-				enableTestCaseParallelization,
 				maxParallelThreads,
 				parallelAlgorithm
 			);
@@ -23,14 +21,12 @@ public static partial class Mocks
 	public static ICollectionBehaviorAttribute CollectionBehaviorAttribute(
 		Type? collectionFactoryType = null,
 		bool disableTestParallelization = false,
-		bool enableTestCaseParallelization = false,
 		int maxParallelThreads = 0,
 		ParallelAlgorithm parallelAlgorithm = ParallelAlgorithm.Conservative)
 	{
 		var result = Substitute.For<ICollectionBehaviorAttribute, InterfaceProxy<ICollectionBehaviorAttribute>>();
 		result.CollectionFactoryType.Returns(collectionFactoryType);
 		result.DisableTestParallelization.Returns(disableTestParallelization);
-		result.EnableTestCaseParallelization.Returns(enableTestCaseParallelization);
 		result.MaxParallelThreads.Returns(maxParallelThreads);
 		result.ParallelAlgorithm.Returns(parallelAlgorithm);
 		return result;
