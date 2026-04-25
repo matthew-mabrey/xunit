@@ -55,6 +55,7 @@ public abstract class TestCollectionFactoryBase(ICodeGenTestAssembly testAssembl
 			definition.ClassFixtureFactories ?? CodeGenHelper.EmptyFixtureFactories,
 			definition.CollectionFixtureFactories ?? CodeGenHelper.EmptyFixtureFactories,
 			definition.DisableParallelization,
+			definition.EnableTestCaseParallelization,
 			TestAssembly,
 			testCollectionClass: definition.Type,
 			attribute.Name,

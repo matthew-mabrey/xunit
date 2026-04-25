@@ -11,6 +11,7 @@ namespace Xunit.v3;
 /// <param name="explicitOption">The user's choice on how to treat explicit tests</param>
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
+/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <typeparam name="TTest">The type of the test used by the test framework. Must
 /// derive from <see cref="ICoreTest"/>.</typeparam>
 /// <typeparam name="TBeforeAfterAttribute">The type of the before after attribute</typeparam>
@@ -23,8 +24,9 @@ public abstract class CoreTestRunnerContext<TTest, TBeforeAfterAttribute>(
 	string? skipReason,
 	ExplicitOption explicitOption,
 	ExceptionAggregator aggregator,
-	CancellationTokenSource cancellationTokenSource) :
-		TestRunnerContext<TTest>(test, messageBus, skipReason, explicitOption, aggregator, cancellationTokenSource)
+	CancellationTokenSource cancellationTokenSource,
+	SemaphoreSlim? parallelizationSemaphore = null) :
+		TestRunnerContext<TTest>(test, messageBus, skipReason, explicitOption, aggregator, cancellationTokenSource, parallelizationSemaphore)
 			where TTest : class, ICoreTest
 			where TBeforeAfterAttribute : notnull
 {

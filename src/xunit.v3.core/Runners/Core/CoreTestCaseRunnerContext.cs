@@ -13,6 +13,7 @@ namespace Xunit.v3;
 /// <param name="displayName">The display name of the test case</param>
 /// <param name="skipReason">The skip reason, if the test case is being skipped</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
+/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <typeparam name="TTestCase">The type of the test case used by the test framework. Must
 /// derive from <see cref="ICoreTestCase"/>.</typeparam>
 /// <typeparam name="TTest">The type of the test used by the test framework. Must
@@ -28,8 +29,9 @@ public abstract class CoreTestCaseRunnerContext<TTestCase, TTest>(
 	ExceptionAggregator aggregator,
 	string displayName,
 	string? skipReason,
-	CancellationTokenSource cancellationTokenSource) :
-		TestCaseRunnerContext<TTestCase, TTest>(testCase, explicitOption, messageBus, aggregator, cancellationTokenSource)
+	CancellationTokenSource cancellationTokenSource,
+	SemaphoreSlim? parallelizationSemaphore = null) :
+		TestCaseRunnerContext<TTestCase, TTest>(testCase, explicitOption, messageBus, aggregator, cancellationTokenSource, parallelizationSemaphore)
 			where TTestCase : class, ICoreTestCase
 			where TTest : class, ICoreTest
 {

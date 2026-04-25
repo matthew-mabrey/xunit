@@ -11,6 +11,7 @@ namespace Xunit.v3;
 /// <param name="messageBus">The message bus to send execution messages to</param>
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
+/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <typeparam name="TTestClass">The type of the test class used by the test framework. Must
 /// derive from <see cref="ICoreTestClass"/>.</typeparam>
 /// <typeparam name="TTestMethod">The type of the test method used by the test framework. Must
@@ -26,8 +27,9 @@ public abstract class CoreTestClassRunnerContext<TTestClass, TTestMethod, TTestC
 	ExplicitOption explicitOption,
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
-	CancellationTokenSource cancellationTokenSource) :
-		TestClassRunnerContext<TTestClass, TTestCase>(testClass, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
+	CancellationTokenSource cancellationTokenSource,
+	SemaphoreSlim? parallelizationSemaphore = null) :
+		TestClassRunnerContext<TTestClass, TTestCase>(testClass, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource, parallelizationSemaphore)
 			where TTestClass : class, ICoreTestClass
 			where TTestMethod : class, ICoreTestMethod
 			where TTestCase : class, ICoreTestCase

@@ -12,6 +12,7 @@ namespace Xunit.v3;
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="constructorArguments">The constructor arguments for the test class</param>
+/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
 /// </remarks>
@@ -22,8 +23,9 @@ public class XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>(
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
-	object?[] constructorArguments) :
-		CoreTestMethodRunnerContext<TTestMethod, TTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
+	object?[] constructorArguments,
+	SemaphoreSlim? parallelizationSemaphore = null) :
+	CoreTestMethodRunnerContext<TTestMethod, TTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource, parallelizationSemaphore)
 			where TTestMethod : class, IXunitTestMethod
 			where TTestCase : class, IXunitTestCase
 {
@@ -36,7 +38,7 @@ public class XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>(
 	public override ValueTask<RunSummary> RunTestCase(TTestCase testCase)
 	{
 		if (testCase is ISelfExecutingXunitTestCase selfExecutingTestCase)
-			return selfExecutingTestCase.Run(ExplicitOption, MessageBus, ConstructorArguments, Aggregator.Clone(), CancellationTokenSource);
+			return selfExecutingTestCase.Run(ExplicitOption, MessageBus, ConstructorArguments, Aggregator.Clone(), CancellationTokenSource, ParallelizationSemaphore);
 
 		return XunitRunnerHelper.RunXunitTestCase(
 			testCase,
