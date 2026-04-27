@@ -117,6 +117,7 @@ partial class Mocks
 		public required int? MaxParallelThreads { get; set; }
 		public required Guid ModuleVersionID { get; set; }
 		public required ParallelAlgorithm? ParallelAlgorithm { get; set; }
+		public SemaphoreSlim? ParallelizationSemaphore { get; set; }
 		public required string TargetFramework { get; set; }
 		public required ITestCaseOrderer? TestCaseOrderer { get; set; }
 		public required ITestClassOrderer? TestClassOrderer { get; set; }

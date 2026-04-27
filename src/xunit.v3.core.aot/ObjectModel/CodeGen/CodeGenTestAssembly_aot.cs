@@ -109,6 +109,9 @@ public sealed class CodeGenTestAssembly : ICodeGenTestAssembly
 		collectionBehavior?.ParallelAlgorithm;
 
 	/// <inheritdoc/>
+	public SemaphoreSlim? ParallelizationSemaphore { get; set; }
+
+	/// <inheritdoc/>
 	public Guid ModuleVersionID { get; }
 
 	/// <remarks>

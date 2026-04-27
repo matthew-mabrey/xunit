@@ -59,7 +59,7 @@ public interface ICoreTestAssembly : ITestAssembly
 	/// <summary>
 	/// Gets the semaphore used to limit parallelization within the execution pipeline.
 	/// </summary>
-	SemaphoreSlim? ParallelizationSemaphore { get; internal set; }
+	SemaphoreSlim? ParallelizationSemaphore { get; set; }
 	
 	/// <summary>
 	/// Gets the target framework the test assembly was compiled against. Will be in a

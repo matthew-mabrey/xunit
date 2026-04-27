@@ -52,8 +52,7 @@ public sealed class CodeGenTestCollection(
 		disableParallelization;
 
 	/// <inheritdoc/>
-	public bool EnableTestCaseParallelization =>
-		enableTestCaseParallelization;
+	public bool EnableTestCaseParallelization { get; set; } = enableTestCaseParallelization;
 	
 	/// <inheritdoc/>
 	public ICodeGenTestAssembly TestAssembly { get; } =

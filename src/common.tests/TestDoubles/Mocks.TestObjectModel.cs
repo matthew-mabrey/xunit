@@ -392,7 +392,7 @@ partial class Mocks
 		public required string? ConfigFilePath { get; set; }
 		public required bool? DisableParallelization { get; set; }
 		public required bool? EnableTestCaseParallelization { get; set; }
-		public required SemaphoreSlim? ParallelizationSemaphore { get; set; }
+		public SemaphoreSlim? ParallelizationSemaphore { get; set; }
 		public required int? MaxParallelThreads { get; set; }
 		public required Guid ModuleVersionID { get; set; }
 		public required ParallelAlgorithm? ParallelAlgorithm { get; set; }
