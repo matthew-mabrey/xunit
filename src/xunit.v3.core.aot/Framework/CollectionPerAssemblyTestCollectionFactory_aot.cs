@@ -21,6 +21,7 @@ public class CollectionPerAssemblyTestCollectionFactory : TestCollectionFactoryB
 				classFixtureFactories: CodeGenHelper.EmptyFixtureFactories,
 				collectionFixtureFactories: CodeGenHelper.EmptyFixtureFactories,
 				disableParallelization: false,
+				enableTestCaseParallelization: false,
 				TestAssembly,
 				testCollectionClass: null,
 				$"Test collection for {Guard.ArgumentNotNull(testAssembly).AssemblyName}",

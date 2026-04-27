@@ -30,6 +30,7 @@ public class TestCollectionFactoryBaseTests
 		Assert.Empty(testCollection.ClassFixtureFactories);
 		Assert.Empty(testCollection.CollectionFixtureFactories);
 		Assert.False(testCollection.DisableParallelization);
+		Assert.False(testCollection.EnableTestCaseParallelization);
 		Assert.Same(testAssembly, testCollection.TestAssembly);
 		Assert.Null(testCollection.TestCaseOrderer);
 		Assert.Equal(testCollectionClassName, testCollection.TestCollectionClassName);
@@ -48,7 +49,7 @@ public class TestCollectionFactoryBaseTests
 	{
 		var collectionDefinitions = new Dictionary<string, CodeGenTestCollectionRegistration>()
 		{
-			["foo"] = new() { DisableParallelization = true }
+			["foo"] = new() { DisableParallelization = true, EnableTestCaseParallelization = true }
 		};
 		var testAssembly = Mocks.CodeGenTestAssembly(collectionDefinitions: collectionDefinitions);
 		var factory = new TestableTestCollectionFactory(testAssembly);
@@ -56,8 +57,9 @@ public class TestCollectionFactoryBaseTests
 		var testCollection = factory.Get(typeof(TestClassForParallelization));
 
 		Assert.True(testCollection.DisableParallelization);
+		Assert.True(testCollection.EnableTestCaseParallelization);
 	}
-
+	
 	[Collection("foo")]
 	class TestClassForParallelization { }
 

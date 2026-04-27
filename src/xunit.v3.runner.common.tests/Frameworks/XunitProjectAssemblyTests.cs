@@ -33,6 +33,7 @@ public class XunitProjectAssemblyTests
 			executionOptions.SetCulture("ef-GH");
 			executionOptions.SetDiagnosticMessages(false);
 			executionOptions.SetDisableParallelization(true);  // true instead of false because it's inverted in the result
+			executionOptions.SetEnableTestCaseParallelization(true);
 			executionOptions.SetExplicitOption(ExplicitOption.On);
 			executionOptions.SetFailSkips(false);
 			executionOptions.SetFailTestsWithWarnings(false);

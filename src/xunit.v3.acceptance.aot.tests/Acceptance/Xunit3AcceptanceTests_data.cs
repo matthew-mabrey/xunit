@@ -399,6 +399,43 @@ public partial class Xunit3AcceptanceTests
 		}
 	}
 
+	public partial class TestNonParallelTestCaseOrdering
+	{
+		[CollectionDefinition("Parallel Test Case Collection", EnableTestCaseParallelization = true)]
+		[TestMethodOrderer(typeof(AlphabeticalMethodOrderer))]
+		public class TestClassParallelTestCaseCollectionDefinition { }
+
+		[Collection("Parallel Test Case Collection")]
+#if XUNIT_AOT
+		public
+#endif
+		class TestClassParallelTestCaseCollection
+		{
+			[Fact]
+			public void Test1() { }
+
+			[Fact]
+			public void Test2() { }
+		}
+		
+		[CollectionDefinition("Non-Parallel Test Case Collection")]
+		[TestMethodOrderer(typeof(AlphabeticalMethodOrderer))]
+		public class CollectionClass { }
+
+		[Collection("Non-Parallel Test Case Collection")]
+#if XUNIT_AOT
+		public
+#endif
+			class TestClassNonParallelTestCaseCollection
+		{
+			[Fact]
+			public void IShouldBeLast2() { }
+
+			[Fact]
+			public void IShouldBeLast1() { }
+		}
+	}
+	
 	public partial class TestOrdering
 	{
 		[CollectionDefinition("Ordered Collection")]

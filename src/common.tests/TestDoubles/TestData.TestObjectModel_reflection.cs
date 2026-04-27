@@ -222,13 +222,15 @@ partial class TestData
 		IXunitTestAssembly assembly,
 		Type? collectionDefinition = null,
 		bool? disableParallelization = null,
+		bool? enableTestCaseParallelization = null,
 		string? displayName = null,
 		string uniqueID = DefaultTestCollectionUniqueID) =>
-			new(assembly, collectionDefinition, disableParallelization ?? false, displayName ?? $"[Unit Test] Collection for '{assembly.AssemblyName}'", uniqueID);
+			new(assembly, collectionDefinition, disableParallelization ?? false, enableTestCaseParallelization ?? false, displayName ?? $"[Unit Test] Collection for '{assembly.AssemblyName}'", uniqueID);
 
 	public static XunitTestCollection XunitTestCollection<TClassUnderTest>(
 		Type? collectionDefinition = null,
 		bool? disableParallelization = null,
+		bool? enableTestCaseParallelization = null,
 		string? displayName = null,
 		string uniqueID = DefaultTestCollectionUniqueID)
 	{
@@ -236,9 +238,10 @@ partial class TestData
 		var standardCollection = new CollectionPerClassTestCollectionFactory(testAssembly).Get(typeof(TClassUnderTest));
 		collectionDefinition ??= standardCollection.CollectionDefinition;
 		disableParallelization ??= standardCollection.DisableParallelization;
+		enableTestCaseParallelization ??= standardCollection.EnableTestCaseParallelization;
 		displayName ??= standardCollection.TestCollectionDisplayName;
 
-		return XunitTestCollection(testAssembly, collectionDefinition, disableParallelization, displayName, uniqueID);
+		return XunitTestCollection(testAssembly, collectionDefinition, disableParallelization, enableTestCaseParallelization, displayName, uniqueID);
 	}
 
 	public static XunitTestMethod XunitTestMethod(

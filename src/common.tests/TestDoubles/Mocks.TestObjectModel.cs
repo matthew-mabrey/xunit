@@ -352,6 +352,7 @@ partial class Mocks
 		string assemblyPath = TestData.DefaultAssemblyPath,
 		string? configFilePath = null,
 		bool? disableParallelization = null,
+		bool? enableTestCaseParallelization = null,
 		int? maxParallelThreads = null,
 		Guid? moduleVersionID = null,
 		ParallelAlgorithm? parallelAlgorithm = null,
@@ -369,6 +370,8 @@ partial class Mocks
 				AssemblyPath = assemblyPath,
 				ConfigFilePath = configFilePath,
 				DisableParallelization = disableParallelization,
+				EnableTestCaseParallelization = enableTestCaseParallelization,
+				ParallelizationSemaphore = null,
 				MaxParallelThreads = maxParallelThreads,
 				ModuleVersionID = moduleVersionID ?? TestData.DefaultModuleVersionID,
 				ParallelAlgorithm = parallelAlgorithm,
@@ -388,6 +391,8 @@ partial class Mocks
 		public required string AssemblyPath { get; set; }
 		public required string? ConfigFilePath { get; set; }
 		public required bool? DisableParallelization { get; set; }
+		public required bool? EnableTestCaseParallelization { get; set; }
+		public required SemaphoreSlim? ParallelizationSemaphore { get; set; }
 		public required int? MaxParallelThreads { get; set; }
 		public required Guid ModuleVersionID { get; set; }
 		public required ParallelAlgorithm? ParallelAlgorithm { get; set; }
@@ -512,6 +517,7 @@ partial class Mocks
 
 	public static ICoreTestCollection CoreTestCollection(
 		bool disableParallelization = false,
+		bool enableTestCaseParallelization = false,
 		ICoreTestAssembly? testAssembly = null,
 		ITestCaseOrderer? testCaseOrderer = null,
 		ITestClassOrderer? testClassOrderer = null,
@@ -523,6 +529,7 @@ partial class Mocks
 			new MockCoreTestCollection
 			{
 				DisableParallelization = disableParallelization,
+				EnableTestCaseParallelization = enableTestCaseParallelization,
 				TestAssembly = testAssembly ?? CoreTestAssembly(),
 				TestCaseOrderer = testCaseOrderer,
 				TestClassOrderer = testClassOrderer,
@@ -536,6 +543,7 @@ partial class Mocks
 	class MockCoreTestCollection : ICoreTestCollection
 	{
 		public required bool DisableParallelization { get; set; }
+		public required bool EnableTestCaseParallelization { get; set; }
 		public required ICoreTestAssembly TestAssembly { get; set; }
 		public required ITestCaseOrderer? TestCaseOrderer { get; set; }
 		public required ITestClassOrderer? TestClassOrderer { get; set; }

@@ -672,7 +672,28 @@ public partial class Xunit3AcceptanceTests
 			);
 		}
 	}
+	
+	/*public partial class TestNonParallelTestCaseOrdering : AcceptanceTestV3
+	{
+		[Fact]
+		public async ValueTask NonParallelTestCaseCollectionsRunLast()
+		{
+#if XUNIT_AOT
+			var testMessages = await RunAsync(["Xunit3AcceptanceTests+TestNonParallelTestCaseOrdering+TestClassNonParallelTestCaseCollection", "Xunit3AcceptanceTests+TestNonParallelTestCaseOrdering+TestClassParallelTestCaseCollection"]);
+#else
+			var testMessages = await RunAsync([typeof(TestClassNonParallelTestCaseCollection), typeof(TestClassParallelTestCaseCollection)]);
+#endif
 
+			Assert.Collection(
+				testMessages.OfType<ITestPassed>().Select(p => testMessages.OfType<ITestMethodStarting>().Single(s => s.TestMethodUniqueID == p.TestMethodUniqueID).MethodName),
+				methodName => Assert.Equal("Test1", methodName),
+				methodName => Assert.Equal("Test2", methodName),
+				methodName => Assert.Equal("IShouldBeLast1", methodName),
+				methodName => Assert.Equal("IShouldBeLast2", methodName)
+			);
+		}
+	}*/
+	
 	public partial class TestOrdering : AcceptanceTestV3
 	{
 		[Fact]

@@ -19,6 +19,7 @@ public class CollectionPerClassTestCollectionFactory(ICodeGenTestAssembly testAs
 			classFixtureFactories: CodeGenHelper.EmptyFixtureFactories,
 			collectionFixtureFactories: CodeGenHelper.EmptyFixtureFactories,
 			disableParallelization: false,
+			enableTestCaseParallelization: false,
 			TestAssembly,
 			testCollectionClass: null,
 			CollectionAttribute.GetCollectionNameForType(testClass),

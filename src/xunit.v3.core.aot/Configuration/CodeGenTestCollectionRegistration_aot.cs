@@ -37,6 +37,15 @@ public sealed class CodeGenTestCollectionRegistration
 	public bool DisableParallelization { get; init; }
 #endif
 
+	/// <summary>
+	/// A flag indicating whether this collection's test cases can run in parallel.
+	/// </summary>
+#if XUNIT_GENERATOR
+	public required bool EnableTestCaseParallelization { get; set; }
+#else
+	public bool EnableTestCaseParallelization { get; init; }
+#endif
+
 #if !XUNIT_GENERATOR
 
 	/// <summary>
