@@ -263,6 +263,19 @@ public class TestAssemblyConfiguration
 	public bool ParallelizeTestCollectionsOrDefault => ParallelizeTestCollections ?? true;
 
 	/// <summary>
+	/// Gets or sets a flag indicating that this test assembly wants to run all test cases
+	/// in parallel against one another.
+	/// </summary>
+	public bool? ParallelizeTestCases { get; set; }
+
+	/// <summary>
+	/// Gets a flag indicating that this test assembly wants to run all test cases
+	/// in parallel against one another. If the flag is not set, returns the default
+	/// value (<see langword="false"/>).
+	/// </summary>
+	public bool ParallelizeTestCasesOrDefault => ParallelizeTestCollections ?? false;
+
+	/// <summary>
 	/// Gets or sets a flag indicating whether theory data should be pre-enumerated during
 	/// test discovery.
 	/// </summary>

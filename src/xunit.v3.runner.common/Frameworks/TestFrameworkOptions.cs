@@ -80,6 +80,7 @@ public class TestFrameworkOptions : ITestFrameworkDiscoveryOptions, ITestFramewo
 		result.SetCulture(configuration.Culture);
 		result.SetDiagnosticMessages(configuration.DiagnosticMessages);
 		result.SetDisableParallelization(!configuration.ParallelizeTestCollections);
+		result.SetEnableTestCaseParallelization(!configuration.ParallelizeTestCases);
 		result.SetExplicitOption(configuration.ExplicitOption);
 		result.SetFailSkips(configuration.FailSkips);
 		result.SetFailTestsWithWarnings(configuration.FailTestsWithWarnings);

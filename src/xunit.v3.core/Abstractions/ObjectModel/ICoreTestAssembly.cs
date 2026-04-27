@@ -29,6 +29,14 @@ public interface ICoreTestAssembly : ITestAssembly
 	bool? DisableParallelization { get; }
 
 	/// <summary>
+	/// Gets a flag which indicates whether test cases in this collection can run in parallel with each other.
+	/// </summary>
+	/// <remarks>
+	/// If this returns <see langword="null"/>, the default value will be used (typically <see langword="false"/>).
+	/// </remarks>
+	bool? EnableTestCaseParallelization { get; }
+	
+	/// <summary>
 	/// Gets the maximum number of threads to use when running tests in parallel. If this returns a
 	/// positive integer, that is the maximum number of threads; if it returns -1, that indicates that
 	/// unlimited threads should be allowed.
@@ -47,7 +55,12 @@ public interface ICoreTestAssembly : ITestAssembly
 	/// This will only be relevant if <see cref="DisableParallelization"/> returns <see langword="false"/>.
 	/// </remarks>
 	ParallelAlgorithm? ParallelAlgorithm { get; }
-
+	
+	/// <summary>
+	/// Gets the semaphore used to limit parallelization within the execution pipeline.
+	/// </summary>
+	SemaphoreSlim? ParallelizationSemaphore { get; internal set; }
+	
 	/// <summary>
 	/// Gets the target framework the test assembly was compiled against. Will be in a
 	/// form like <c>".NETFramework,Version=v4.7.2"</c> or <c>".NETCoreApp,Version=v8.0"</c>.

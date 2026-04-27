@@ -231,6 +231,16 @@ public static class TestFrameworkOptionsReadExtensions
 	}
 
 	/// <summary>
+	/// Gets a flag indicating whether to enable test case parallelization within all test collections by default.
+	/// </summary>
+	public static bool? EnableTestCaseParallelization(this ITestFrameworkExecutionOptions executionOptions)
+	{
+		Guard.ArgumentNotNull(executionOptions);
+
+		return executionOptions.GetValue<bool?>(TestOptionsNames.Execution.EnableTestCaseParallelization);
+	}
+
+	/// <summary>
 	/// Gets a flag to disable parallelization. If the flag is not present, returns the
 	/// default value (<see langword="false"/>).
 	/// </summary>

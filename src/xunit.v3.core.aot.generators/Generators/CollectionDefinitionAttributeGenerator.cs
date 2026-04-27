@@ -36,10 +36,15 @@ public class CollectionDefinitionAttributeGenerator() :
 			name = stringValue;
 
 		var disableParallelization = false;
-		if (attribute.NamedArguments.FirstOrDefault(kvp => kvp.Key == Names.Xunit.CollectionDefinitionAttribute.DisableParallelization) is { } namedArg
-				&& namedArg.Value.Value is true)
+		var enableTestCaseParallelization = false;
+		if (attribute.NamedArguments.FirstOrDefault(kvp => kvp.Key == Names.Xunit.CollectionDefinitionAttribute.DisableParallelization) is { } disableParallelizationArg
+				&& disableParallelizationArg.Value.Value is true)
 			disableParallelization = true;
 
+		if (attribute.NamedArguments.FirstOrDefault(kvp => kvp.Key == Names.Xunit.CollectionDefinitionAttribute.EnableTestCaseParallelization) is { } enableTestCaseParallelizationArg
+		    && enableTestCaseParallelizationArg.Value.Value is true)
+			enableTestCaseParallelization = true;
+		
 		var testCaseOrdererType = default(string);
 		var testClassOrdererType = default(string);
 		var testMethodOrdererType = default(string);
@@ -114,6 +119,7 @@ public class CollectionDefinitionAttributeGenerator() :
 			ClassFixtures = classFixtures,
 			CollectionFixtures = collectionFixtures,
 			DisableParallelization = disableParallelization,
+			EnableTestCaseParallelization = enableTestCaseParallelization,
 			TestCaseOrdererType = testCaseOrdererType,
 			TestClassOrdererType = testClassOrdererType,
 			TestMethodOrdererType = testMethodOrdererType,

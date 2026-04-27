@@ -19,6 +19,11 @@ public interface ICoreTestCollection : ITestCollection
 	/// Determines whether tests in this collection runs in parallel with any other collections.
 	/// </summary>
 	bool DisableParallelization { get; }
+	
+	/// <summary>
+	/// Determines whether test cases in this collection can run in parallel.
+	/// </summary>
+	bool EnableTestCaseParallelization { get; internal set; }
 
 	/// <summary>
 	/// Gets the test assembly this test collection belongs to.

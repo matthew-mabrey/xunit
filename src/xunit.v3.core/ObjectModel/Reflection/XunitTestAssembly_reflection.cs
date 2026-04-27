@@ -112,6 +112,9 @@ public class XunitTestAssembly : IXunitTestAssembly, IXunitSerializable
 		CollectionBehavior?.DisableTestParallelization;
 
 	/// <inheritdoc/>
+	public bool? EnableTestCaseParallelization => CollectionBehavior?.EnableTestCaseParallelization;
+
+	/// <inheritdoc/>
 	public int? MaxParallelThreads =>
 		CollectionBehavior?.MaxParallelThreads;
 
@@ -119,6 +122,9 @@ public class XunitTestAssembly : IXunitTestAssembly, IXunitSerializable
 	public ParallelAlgorithm? ParallelAlgorithm =>
 		CollectionBehavior?.ParallelAlgorithm;
 
+	/// <inheritdoc/>
+	public SemaphoreSlim? ParallelizationSemaphore { get; set; }
+	
 	/// <inheritdoc/>
 	public Guid ModuleVersionID =>
 		Assembly.Modules.FirstOrDefault()?.ModuleVersionId ?? Guid.Empty;

@@ -33,6 +33,11 @@ public sealed class CollectionDefinitionAttribute : Attribute
 	public bool DisableParallelization { get; set; }
 
 	/// <summary>
+	/// Determines whether test cases in this collection can run in parallel with each other.
+	/// </summary>
+	public bool EnableTestCaseParallelization { get; set; }
+
+	/// <summary>
 	/// Gets the collection defintion name, if one was provided.
 	/// </summary>
 	public string? Name { get; }

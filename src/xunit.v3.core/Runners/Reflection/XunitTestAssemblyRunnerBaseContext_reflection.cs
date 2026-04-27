@@ -54,7 +54,7 @@ public class XunitTestAssemblyRunnerBaseContext<TTestAssembly, TTestCollection, 
 		IReadOnlyCollection<TTestCase> testCases)
 	{
 		await BeforeTestCollection();
-
+		
 		try
 		{
 			return await XunitTestCollectionRunner.Instance.Run(

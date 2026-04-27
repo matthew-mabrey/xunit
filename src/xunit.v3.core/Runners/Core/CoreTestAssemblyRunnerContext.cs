@@ -31,7 +31,6 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 			where TTestCollection : class, ICoreTestCollection
 			where TTestCase : class, ICoreTestCase
 {
-	SemaphoreSlim? parallelSemaphore;
 	MaxConcurrencySyncContext? syncContext;
 
 	/// <summary>
@@ -39,6 +38,12 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 	/// </summary>
 	public virtual bool DisableParallelization =>
 		ExecutionOptions.DisableParallelization() ?? TestAssembly.DisableParallelization ?? false;
+
+	/// <summary>
+	/// Gets a flag which indicates whether to enable or disable parallelization of test cases in all collections.
+	/// </summary>
+	public virtual bool? EnableTestCaseParallelization =>
+		ExecutionOptions.EnableTestCaseParallelization() ?? TestAssembly.EnableTestCaseParallelization;
 
 	/// <summary>
 	/// Gets a flag which indicates how explicit tests should be handled.
@@ -67,7 +72,7 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 			ParallelAlgorithm.Aggressive => ParallelAlgorithm.Aggressive,
 			_ => ParallelAlgorithm.Conservative,  // implicit invalid value validation/conversion to default
 		};
-
+	
 	/// <inheritdoc/>
 	public override string TargetFramework =>
 		TestAssembly.TargetFramework;
@@ -101,15 +106,15 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 	/// To be called after the test collection has been executed.
 	/// </summary>
 	public void AfterTestCollection() =>
-		parallelSemaphore?.Release();
+		TestAssembly.ParallelizationSemaphore?.Release();
 
 	/// <summary>
 	/// To be called before executing a test collection.
 	/// </summary>
 	public async ValueTask BeforeTestCollection()
 	{
-		if (parallelSemaphore is not null)
-			await parallelSemaphore.WaitAsync(TestContext.Current.CancellationToken);
+		if (TestAssembly.ParallelizationSemaphore is not null)
+			await TestAssembly.ParallelizationSemaphore.WaitAsync(TestContext.Current.CancellationToken);
 	}
 
 	/// <inheritdoc/>
@@ -122,7 +127,7 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 		else if (syncContext is IDisposable disposable)
 			disposable.SafeDispose();
 
-		parallelSemaphore?.Dispose();
+		TestAssembly.ParallelizationSemaphore?.Dispose();
 
 		await base.DisposeAsync();
 	}
@@ -165,7 +170,7 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 		// that the .NET Thread Pool has enough threads based on the user's requested maximum
 		else
 		{
-			parallelSemaphore = new(initialCount: maxParallelThreads);
+			TestAssembly.ParallelizationSemaphore = new(initialCount: maxParallelThreads);
 
 			ThreadPool.GetMinThreads(out var workerThreads, out var completionPortThreads);
 			var threadFloor = Math.Min(4, maxParallelThreads);

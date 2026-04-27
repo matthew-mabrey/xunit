@@ -19,6 +19,11 @@ public interface ICollectionBehaviorAttribute
 	bool DisableTestParallelization { get; }
 
 	/// <summary>
+	/// Determines whether test cases in all test collections in this assembly can run in parallel.
+	/// </summary>
+	bool EnableTestCaseParallelization { get; }
+
+	/// <summary>
 	/// Determines how many tests can run in parallel with each other. If set to 0, the system will
 	/// use <see cref="Environment.ProcessorCount"/>. If set to a negative number, then there will
 	/// be no limit to the number of threads.

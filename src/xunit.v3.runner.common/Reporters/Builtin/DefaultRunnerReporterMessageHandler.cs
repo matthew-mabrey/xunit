@@ -351,7 +351,10 @@ public class DefaultRunnerReporterMessageHandler : TestMessageSink, IRunnerRepor
 		{
 			var threadCount = executionStarting.ExecutionOptions.GetMaxParallelThreadsOrDefault();
 			var parallelAlgorithm = executionStarting.ExecutionOptions.GetParallelAlgorithmOrDefault();
-			var parallelTestCollections =
+			var parallelizationMode = executionStarting.ExecutionOptions.GetEnableTestCaseParallelizationOrDefault()
+				? "parallel test cases"
+				: "parallel test collections";
+			var parallelizationSettings =
 				executionStarting.ExecutionOptions.GetDisableParallelizationOrDefault()
 					? "off"
 					: string.Format(
@@ -369,9 +372,10 @@ public class DefaultRunnerReporterMessageHandler : TestMessageSink, IRunnerRepor
 				culture = "invariant";
 
 			Logger.LogImportantMessage(
-				"  Starting:    {0} (parallel test collections = {1}, stop on fail = {2}, explicit = {3}{4}{5})",
+				"  Starting:    {0} ({1} = {2}, stop on fail = {3}, explicit = {4}{5}{6})",
 				assemblyDisplayName,
-				parallelTestCollections,
+				parallelizationMode,
+				parallelizationSettings,
 				executionStarting.ExecutionOptions.GetStopOnTestFailOrDefault() ? "on" : "off",
 				@explicit,
 				executionStarting.Seed is null ? "" : string.Format(CultureInfo.CurrentCulture, ", seed = {0}", executionStarting.Seed),
