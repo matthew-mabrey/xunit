@@ -17,14 +17,12 @@ public interface ISelfExecutingXunitTestCase : IXunitTestCase
 	/// <param name="constructorArguments">The arguments to pass to the constructor.</param>
 	/// <param name="aggregator">The error aggregator to use for catching exception.</param>
 	/// <param name="cancellationTokenSource">The cancellation token source that indicates whether cancellation has been requested.</param>
-	/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 	/// <returns>Returns the summary of the test case run.</returns>
 	ValueTask<RunSummary> Run(
 		ExplicitOption explicitOption,
 		IMessageBus messageBus,
 		object?[] constructorArguments,
 		ExceptionAggregator aggregator,
-		CancellationTokenSource cancellationTokenSource,
-		SemaphoreSlim? parallelizationSemaphore
+		CancellationTokenSource cancellationTokenSource
 	);
 }

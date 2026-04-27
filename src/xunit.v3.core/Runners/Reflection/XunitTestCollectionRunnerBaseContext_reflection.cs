@@ -14,7 +14,6 @@ namespace Xunit.v3;
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="assemblyFixtureMappings">The fixtures associated with the test assembly</param>
-/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
 /// </remarks>
@@ -25,15 +24,14 @@ public abstract class XunitTestCollectionRunnerBaseContext<TTestCollection, TTes
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
-	FixtureMappingManager assemblyFixtureMappings,
-	SemaphoreSlim? parallelizationSemaphore = null) :
-		CoreTestCollectionRunnerContext<TTestCollection, TTestClass, TTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource, parallelizationSemaphore)
+	FixtureMappingManager assemblyFixtureMappings) :
+		CoreTestCollectionRunnerContext<TTestCollection, TTestClass, TTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
 			where TTestCollection : class, IXunitTestCollection
 			where TTestClass : class, IXunitTestClass
 			where TTestCase : class, IXunitTestCase
 {
 	/// <summary>
-	/// Please use <see cref="XunitTestCollectionRunnerBaseContext(TTestCollection, IReadOnlyCollection{TTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager, SemaphoreSlim?)"/>.
+	/// Please use <see cref="XunitTestCollectionRunnerBaseContext(TTestCollection, IReadOnlyCollection{TTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager)"/>.
 	/// This overload will be removed in the next major version.
 	/// </summary>
 	[Obsolete("Please use the constructor which accepts testClassOrderer and testMethodOrderer. This overload will be removed in the next major version.")]

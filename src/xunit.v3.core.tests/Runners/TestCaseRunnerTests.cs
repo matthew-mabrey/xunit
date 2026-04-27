@@ -84,9 +84,8 @@ public class TestCaseRunnerTests
 		ExplicitOption explicitOption,
 		IMessageBus messageBus,
 		ExceptionAggregator aggregator,
-		CancellationTokenSource cancellationTokenSource,
-		SemaphoreSlim? parallelizationSemaphore = null) :
-			TestCaseRunnerContext<ITestCase, ITest>(testCase, explicitOption, messageBus, aggregator, cancellationTokenSource, parallelizationSemaphore)
+		CancellationTokenSource cancellationTokenSource) :
+			TestCaseRunnerContext<ITestCase, ITest>(testCase, explicitOption, messageBus, aggregator, cancellationTokenSource)
 	{
 		public override IReadOnlyCollection<ITest> Tests { get; } = [test];
 	}

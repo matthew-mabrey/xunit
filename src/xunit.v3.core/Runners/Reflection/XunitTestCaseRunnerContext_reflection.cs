@@ -14,7 +14,6 @@ namespace Xunit.v3;
 /// <param name="skipReason">The skip reason, if the test case is being skipped</param>
 /// <param name="explicitOption">The user's choice on how to treat explicit tests</param>
 /// <param name="constructorArguments">The constructor arguments for the test class</param>
-/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
 /// </remarks>
@@ -27,7 +26,6 @@ public class XunitTestCaseRunnerContext(
 	string displayName,
 	string? skipReason,
 	ExplicitOption explicitOption,
-	object?[] constructorArguments,
-	SemaphoreSlim? parallelizationSemaphore = null) :
-		XunitTestCaseRunnerBaseContext<IXunitTestCase, IXunitTest>(testCase, tests, messageBus, aggregator, cancellationTokenSource, displayName, skipReason, explicitOption, constructorArguments, parallelizationSemaphore)
+	object?[] constructorArguments) :
+		XunitTestCaseRunnerBaseContext<IXunitTestCase, IXunitTest>(testCase, tests, messageBus, aggregator, cancellationTokenSource, displayName, skipReason, explicitOption, constructorArguments)
 { }

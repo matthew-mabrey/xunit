@@ -39,7 +39,6 @@ public class XunitTestCaseRunner :
 	/// <param name="skipReason">The skip reason, if the test is to be skipped.</param>
 	/// <param name="explicitOption">A flag to indicate how explicit tests should be treated.</param>
 	/// <param name="constructorArguments">The arguments to be passed to the test class constructor.</param>
-	/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 	/// <returns>Returns summary information about the test that was run.</returns>
 	public async ValueTask<RunSummary> Run(
 		IXunitTestCase testCase,
@@ -50,8 +49,7 @@ public class XunitTestCaseRunner :
 		string displayName,
 		string? skipReason,
 		ExplicitOption explicitOption,
-		object?[] constructorArguments,
-		SemaphoreSlim? parallelizationSemaphore = null)
+		object?[] constructorArguments)
 	{
 		await using var ctxt = new XunitTestCaseRunnerContext(
 			testCase,
@@ -62,8 +60,7 @@ public class XunitTestCaseRunner :
 			displayName,
 			skipReason,
 			explicitOption,
-			constructorArguments,
-			parallelizationSemaphore
+			constructorArguments
 		);
 		await ctxt.InitializeAsync();
 
