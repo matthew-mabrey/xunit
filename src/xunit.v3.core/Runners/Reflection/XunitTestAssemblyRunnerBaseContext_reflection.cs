@@ -64,7 +64,8 @@ public class XunitTestAssemblyRunnerBaseContext<TTestAssembly, TTestCollection, 
 				MessageBus,
 				Aggregator.Clone(),
 				CancellationTokenSource,
-				AssemblyFixtureMappings
+				AssemblyFixtureMappings,
+				ParallelizationSemaphore
 			);
 		}
 		finally

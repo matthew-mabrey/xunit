@@ -94,6 +94,7 @@ public partial class XunitProjectAssembly
 				Configuration.ParallelAlgorithm,
 				Configuration.ParallelizeAssembly,
 				Configuration.ParallelizeTestCollections,
+				Configuration.ParallelizeTestCases,
 				settings.Options.GetPreEnumerateTheories() ?? Configuration.PreEnumerateTheories,
 				settings.Options.GetPrintMaxEnumerableLength() ?? Configuration.PrintMaxEnumerableLength,
 				settings.Options.GetPrintMaxObjectDepth() ?? Configuration.PrintMaxObjectDepth,
@@ -152,6 +153,11 @@ public partial class XunitProjectAssembly
 					false => true,
 					_ => Configuration.ParallelizeTestCollections,
 				},
+				settings.ExecutionOptions.GetDisableParallelization() switch
+				{
+					true => false,
+					_ => Configuration.ParallelizeTestCases,
+				},
 				settings.DiscoveryOptions.GetPreEnumerateTheories() ?? Configuration.PreEnumerateTheories,
 				settings.ExecutionOptions.GetPrintMaxEnumerableLength() ?? settings.DiscoveryOptions.GetPrintMaxEnumerableLength() ?? Configuration.PrintMaxEnumerableLength,
 				settings.ExecutionOptions.GetPrintMaxObjectDepth() ?? settings.DiscoveryOptions.GetPrintMaxObjectDepth() ?? Configuration.PrintMaxObjectDepth,
@@ -209,6 +215,11 @@ public partial class XunitProjectAssembly
 					true => false,
 					false => true,
 					_ => Configuration.ParallelizeTestCollections,
+				},
+				settings.Options.GetDisableParallelization() switch
+				{
+					true => false,
+					_ => Configuration.ParallelizeTestCases,
 				},
 				Configuration.PreEnumerateTheories,
 				settings.Options.GetPrintMaxEnumerableLength() ?? Configuration.PrintMaxEnumerableLength,

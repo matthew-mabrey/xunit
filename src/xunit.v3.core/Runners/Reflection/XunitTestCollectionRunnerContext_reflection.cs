@@ -14,6 +14,7 @@ namespace Xunit.v3;
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="assemblyFixtureMappings">The fixtures associated with the test assembly</param>
+/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
 /// </remarks>
@@ -24,11 +25,12 @@ public class XunitTestCollectionRunnerContext(
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
-	FixtureMappingManager assemblyFixtureMappings) :
+	FixtureMappingManager assemblyFixtureMappings,
+	SemaphoreSlim? parallelizationSemaphore) :
 		XunitTestCollectionRunnerBaseContext<IXunitTestCollection, IXunitTestClass, IXunitTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource, assemblyFixtureMappings)
 {
 	/// <summary>
-	/// Please use <see cref="XunitTestCollectionRunnerContext(IXunitTestCollection, IReadOnlyCollection{IXunitTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager)"/>.
+	/// Please use <see cref="XunitTestCollectionRunnerContext(IXunitTestCollection, IReadOnlyCollection{IXunitTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager, SemaphoreSlim?)"/>.
 	/// This overload will be removed in the next major version.
 	/// </summary>
 	[Obsolete("Please use the constructor which accepts testClassOrderer and testMethodOrderer. This overload will be removed in the next major version.")]
@@ -50,7 +52,8 @@ public class XunitTestCollectionRunnerContext(
 				messageBus,
 				aggregator,
 				cancellationTokenSource,
-				assemblyFixtureMappings
+				assemblyFixtureMappings,
+				parallelizationSemaphore: null
 			)
 	{ }
 
@@ -65,6 +68,7 @@ public class XunitTestCollectionRunnerContext(
 				MessageBus,
 				Aggregator.Clone(),
 				CancellationTokenSource,
-				CollectionFixtureMappings
+				CollectionFixtureMappings,
+				parallelizationSemaphore
 			);
 }

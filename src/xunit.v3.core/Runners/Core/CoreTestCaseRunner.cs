@@ -86,8 +86,13 @@ public class CoreTestCaseRunner<TContext, TTestCase, TTest> : TestCaseRunner<TCo
 		TTest test)
 	{
 		Guard.ArgumentNotNull(ctxt);
+
+		// only acquire the semaphore here if the collection has enabled test case parallelization, otherwise
+		// it is acquired when the test collection is started
+		var parallelizationSemaphore = ctxt.TestCase.TestCollection.EnableTestCaseParallelization
+			? ctxt.ParallelizationSemaphore
+			: null;
 		
-		var parallelizationSemaphore = ctxt.TestCase.TestCollection.TestAssembly.ParallelizationSemaphore;
 		if (parallelizationSemaphore != null)
 		{
 			await parallelizationSemaphore.WaitAsync(ctxt.CancellationTokenSource.Token);

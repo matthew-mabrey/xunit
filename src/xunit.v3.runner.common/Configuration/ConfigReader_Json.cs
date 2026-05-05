@@ -135,6 +135,8 @@ public static class ConfigReader_Json
 						configuration.ParallelizeAssembly = booleanValue;
 					else if (string.Equals(kvp.Key, Configuration.ParallelizeTestCollections, StringComparison.OrdinalIgnoreCase))
 						configuration.ParallelizeTestCollections = booleanValue;
+					else if (string.Equals(kvp.Key, Configuration.ParallelizeTestCases, StringComparison.OrdinalIgnoreCase))
+						configuration.ParallelizeTestCases = booleanValue;
 					else if (string.Equals(kvp.Key, Configuration.PreEnumerateTheories, StringComparison.OrdinalIgnoreCase))
 						configuration.PreEnumerateTheories = booleanValue;
 					else if (string.Equals(kvp.Key, Configuration.ShadowCopy, StringComparison.OrdinalIgnoreCase))
@@ -267,6 +269,7 @@ public static class ConfigReader_Json
 		public const string ParallelAlgorithm = "parallelAlgorithm";
 		public const string ParallelizeAssembly = "parallelizeAssembly";
 		public const string ParallelizeTestCollections = "parallelizeTestCollections";
+		public const string ParallelizeTestCases = "parallelizeTestCases";
 		public const string PreEnumerateTheories = "preEnumerateTheories";
 		public const string PrintMaxEnumerableLength = "printMaxEnumerableLength";
 		public const string PrintMaxObjectDepth = "printMaxObjectDepth";

@@ -93,9 +93,6 @@ public abstract class CoreTestAssemblyRunner<TContext, TTestAssembly, TTestColle
 		if (ctxt.DisableParallelization || exception is not null)
 			return await base.RunTestCollections(ctxt, exception);
 
-		using var parallelizationSemaphore = ctxt.SetupParallelism();
-		ctxt.TestAssembly.ParallelizationSemaphore = parallelizationSemaphore;
-
 		Func<Func<ValueTask<RunSummary>>, ValueTask<RunSummary>> taskRunner;
 		if (SynchronizationContext.Current is not null)
 		{

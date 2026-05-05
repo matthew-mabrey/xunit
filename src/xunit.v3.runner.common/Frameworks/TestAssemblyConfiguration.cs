@@ -32,6 +32,7 @@ public class TestAssemblyConfiguration
 		ParallelAlgorithm? parallelAlgorithm,
 		bool? parallelizeAssembly,
 		bool? parallelizeTestCollections,
+		bool? parallelizeTestCases,
 		bool? preEnumerateTheories,
 		int? printMaxEnumerableLength,
 		int? printMaxObjectDepth,
@@ -61,6 +62,7 @@ public class TestAssemblyConfiguration
 		ParallelAlgorithm = parallelAlgorithm;
 		ParallelizeAssembly = parallelizeAssembly;
 		ParallelizeTestCollections = parallelizeTestCollections;
+		ParallelizeTestCases = parallelizeTestCases;
 		PreEnumerateTheories = preEnumerateTheories;
 		PrintMaxEnumerableLength = printMaxEnumerableLength;
 		PrintMaxObjectDepth = printMaxObjectDepth;
@@ -273,7 +275,7 @@ public class TestAssemblyConfiguration
 	/// in parallel against one another. If the flag is not set, returns the default
 	/// value (<see langword="false"/>).
 	/// </summary>
-	public bool ParallelizeTestCasesOrDefault => ParallelizeTestCollections ?? false;
+	public bool ParallelizeTestCasesOrDefault => ParallelizeTestCases ?? false;
 
 	/// <summary>
 	/// Gets or sets a flag indicating whether theory data should be pre-enumerated during

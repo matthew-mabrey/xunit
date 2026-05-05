@@ -27,7 +27,7 @@ public class CodeGenTestCaseRunnerContext(
 	string? skipReason,
 	CancellationTokenSource cancellationTokenSource,
 	FixtureMappingManager classFixtureMappings) :
-		CoreTestCaseRunnerContext<ICodeGenTestCase, ICodeGenTest>(testCase, tests, explicitOption, messageBus, aggregator, displayName, skipReason, cancellationTokenSource)
+		CoreTestCaseRunnerContext<ICodeGenTestCase, ICodeGenTest>(testCase, tests, explicitOption, messageBus, aggregator, displayName, skipReason, cancellationTokenSource, parallelizationSemaphore: null)
 {
 	/// <inheritdoc/>
 	public override ValueTask<RunSummary> RunTest(ICodeGenTest test) =>

@@ -57,11 +57,6 @@ public interface ICoreTestAssembly : ITestAssembly
 	ParallelAlgorithm? ParallelAlgorithm { get; }
 	
 	/// <summary>
-	/// Gets the semaphore used to limit parallelization within the execution pipeline.
-	/// </summary>
-	SemaphoreSlim? ParallelizationSemaphore { get; set; }
-	
-	/// <summary>
 	/// Gets the target framework the test assembly was compiled against. Will be in a
 	/// form like <c>".NETFramework,Version=v4.7.2"</c> or <c>".NETCoreApp,Version=v8.0"</c>.
 	/// </summary>

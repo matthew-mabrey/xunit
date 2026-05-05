@@ -27,6 +27,7 @@ public class xunit : MSBuildTask, ICancelableTask, IDisposable
 	readonly object logLock = new();
 	bool? parallelizeAssemblies;
 	bool? parallelizeTestCollections;
+	bool? parallelizeTestCases;
 	bool? preEnumerateTheories;
 	IRunnerReporterMessageHandler? reporterMessageHandler;
 	readonly IReadOnlyDictionary<string, IConsoleResultWriter> resultWriters = RegisteredRunnerConfig.GetConsoleResultWriters(typeof(xunit).Assembly);
@@ -129,6 +130,9 @@ public class xunit : MSBuildTask, ICancelableTask, IDisposable
 
 	/// <summary/>
 	public bool ParallelizeTestCollections { set => parallelizeTestCollections = value; }
+	
+	/// <summary/>
+	public bool ParallelizeTestCases { set => parallelizeTestCases = value; }
 
 	/// <summary/>
 	public bool PreEnumerateTheories { set => preEnumerateTheories = value; }
@@ -352,6 +356,8 @@ public class xunit : MSBuildTask, ICancelableTask, IDisposable
 						projectAssembly.Configuration.ParallelAlgorithm = parallelAlgorithm;
 					if (parallelizeTestCollections.HasValue)
 						projectAssembly.Configuration.ParallelizeTestCollections = parallelizeTestCollections;
+					if (parallelizeTestCases.HasValue)
+						projectAssembly.Configuration.ParallelizeTestCases = parallelizeTestCases;
 					if (preEnumerateTheories.HasValue)
 						projectAssembly.Configuration.PreEnumerateTheories = preEnumerateTheories;
 					if (shadowCopy.HasValue)

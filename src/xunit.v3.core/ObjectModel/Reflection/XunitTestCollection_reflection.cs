@@ -88,7 +88,7 @@ public class XunitTestCollection : IXunitTestCollection, IXunitSerializable
 	public bool DisableParallelization { get; private set; }
 
 	/// <inheritdoc/>
-	public bool EnableTestCaseParallelization { get; set; } // TODO: Change this to pass down through contexts possibly
+	public bool EnableTestCaseParallelization { get; set; }
 
 	/// <inheritdoc/>
 	public IXunitTestAssembly TestAssembly =>

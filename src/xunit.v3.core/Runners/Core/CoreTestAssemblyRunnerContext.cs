@@ -72,6 +72,11 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 			ParallelAlgorithm.Aggressive => ParallelAlgorithm.Aggressive,
 			_ => ParallelAlgorithm.Conservative,  // implicit invalid value validation/conversion to default
 		};
+
+	/// <summary>
+	/// Gets the semaphore used to limit parallelization within the execution pipeline.
+	/// </summary>
+	public SemaphoreSlim? ParallelizationSemaphore { get; private set; }
 	
 	/// <inheritdoc/>
 	public override string TargetFramework =>
@@ -107,25 +112,33 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 	/// </summary>
 	public void AfterTestCollection()
 	{
+		if (EnableTestCaseParallelization != true)
+		{
+			ParallelizationSemaphore?.Release();
+		}
 	}
 
 	/// <summary>
 	/// To be called before executing a test collection.
 	/// </summary>
-	public ValueTask BeforeTestCollection() => default;
+	public async ValueTask BeforeTestCollection()
+	{
+		if (EnableTestCaseParallelization != true && ParallelizationSemaphore is not null)
+			await ParallelizationSemaphore.WaitAsync(TestContext.Current.CancellationToken);
+	}
 
 	/// <inheritdoc/>
 	public override async ValueTask DisposeAsync()
 	{
 		GC.SuppressFinalize(this);
-
+		
 		if (syncContext is IAsyncDisposable asyncDisposable)
 			await asyncDisposable.SafeDisposeAsync();
 		else if (syncContext is IDisposable disposable)
 			disposable.SafeDispose();
 
-		TestAssembly.ParallelizationSemaphore?.Dispose();
-
+		ParallelizationSemaphore?.Dispose();
+		
 		await base.DisposeAsync();
 	}
 
@@ -149,20 +162,20 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 	/// <summary>
 	/// Sets up the mechanics for parallelism.
 	/// </summary>
-	public virtual SemaphoreSlim? SetupParallelism()
+	protected virtual void SetupParallelism()
 	{
 		var maxParallelThreads = MaxParallelThreads;
 
 		// When unlimited, we just launch everything and let the .NET Thread Pool sort it out
 		if (maxParallelThreads < 0)
-			return null;
+			return;
 
 		// For aggressive, we launch everything and let our sync context limit what's allowed to run
 		if (ParallelAlgorithm == ParallelAlgorithm.Aggressive)
 		{
 			syncContext = new MaxConcurrencySyncContext(maxParallelThreads);
 			SetupSyncContextInternal(syncContext);
-			return null;
+			return;
 		}
 		
 		// For conversative, we use a semaphore to limit the number of launched tests, and ensure
@@ -172,7 +185,14 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 		if (workerThreads < threadFloor)
 			ThreadPool.SetMinThreads(threadFloor, completionPortThreads);
 		
-		return new(initialCount: maxParallelThreads);
+		ParallelizationSemaphore = new(initialCount: maxParallelThreads);
+	}
+
+	/// <inheritdoc/>
+	public override ValueTask InitializeAsync()
+	{
+		SetupParallelism();
+		return base.InitializeAsync();
 	}
 
 	[SecuritySafeCritical]
