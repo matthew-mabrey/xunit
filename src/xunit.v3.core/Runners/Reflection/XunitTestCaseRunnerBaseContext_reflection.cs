@@ -28,8 +28,9 @@ public class XunitTestCaseRunnerBaseContext<TTestCase, TTest>(
 	string? skipReason,
 	ExplicitOption explicitOption,
 	object?[] constructorArguments,
+	bool enableTestCaseParallelization,
 	SemaphoreSlim? parallelizationSemaphore) :
-		CoreTestCaseRunnerContext<TTestCase, TTest>(testCase, tests, explicitOption, messageBus, aggregator, displayName, skipReason, cancellationTokenSource, parallelizationSemaphore)
+		CoreTestCaseRunnerContext<TTestCase, TTest>(testCase, tests, explicitOption, messageBus, aggregator, displayName, skipReason, enableTestCaseParallelization, parallelizationSemaphore, cancellationTokenSource)
 			where TTestCase : class, IXunitTestCase
 			where TTest : class, IXunitTest
 {

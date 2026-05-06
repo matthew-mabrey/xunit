@@ -78,45 +78,105 @@ public class CoreTestCaseRunnerTests
 		[Fact]
 		public async ValueTask ParallelTestCases()
 		{
-			var testCollection1 = Mocks.CoreTestCollection(uniqueID: "1");
-			var testCase1 = Mocks.CoreTestCase(testCaseDisplayName: "TestCase1", testMethod: Mocks.CoreTestMethod(testClass: Mocks.CoreTestClass(testCollection: testCollection1)));
-			var testCollection2 = Mocks.CoreTestCollection(uniqueID: "2");
-			var testCase2 = Mocks.CoreTestCase(testCaseDisplayName: "TestCase2", testMethod: Mocks.CoreTestMethod(testClass: Mocks.CoreTestClass(testCollection: testCollection2)));
-			var options = TestData.TestFrameworkExecutionOptions(enableTestCaseParallelization: true);
-			var runner = new TestableCoreTestAssemblyRunner([testCase1, testCase2], options);
+			var testTcs1 = new TaskCompletionSource<bool>(TaskCreationOptions.None);
+			var testTcs2 = new TaskCompletionSource<bool>(TaskCreationOptions.None);
+			var testCase = Mocks.CoreTestCase(testCaseDisplayName: "TestCase1");
+			var test1 = Mocks.CoreTest(testCase: testCase, testDisplayName: "Test1");
+			var test2 = Mocks.CoreTest(testCase: testCase, testDisplayName: "Test2");
+			
+			var finishedTask = Task.WhenAll(testTcs1.Task, testTcs2.Task);
+			var runner = new TestableCoreTestCaseRunner([test1, test2], runTestCase);
 
 			await runner.RunAsync();
+			
+			async ValueTask<RunSummary> runTestCase(ICoreTest test)
+			{
+				if (test == test1)
+				{
+					testTcs1.TrySetResult(true);
+				}
+				else
+				{
+					testTcs2.TrySetResult(true);
+				}
 
-			// When it's parallel, we should always get pre, pre, post, post
-			var messages = DiagnosticMessageSink.Messages.OfType<IDiagnosticMessage>().Select(m => m.Message).ToArray();
-			Assert.Equal(4, messages.Length);
-			var firstPreSleep = messages[0];
-			Assert.EndsWith("pre-sleep", firstPreSleep);
-			Assert.Equal(firstPreSleep.Replace("pre-", "post-"), messages[1]);
-			var secondPreSleep = messages[2];
-			Assert.EndsWith("pre-sleep", secondPreSleep);
-			Assert.Equal(secondPreSleep.Replace("pre-", "post-"), messages[3]);
+				await finishedTask;
+				return new RunSummary();
+			};
+		}
+
+		[Fact]
+		public async ValueTask SyncTestCases()
+		{
+			var messages = new List<string>();
+			var testCase = Mocks.CoreTestCase(testCaseDisplayName: "TestCase1");
+			var test1 = Mocks.CoreTest(testCase: testCase, testDisplayName: "Test1");
+			var test2 = Mocks.CoreTest(testCase: testCase, testDisplayName: "Test2");
+			
+			var runner = new TestableCoreTestCaseRunner([test1, test2], runTestCase);
+
+			await runner.RunAsync();
+			
+			// let each test finish before the next one runs, despite sleeping. However, we don't know which one
+			// gets to go first, so we look at the first one to see which one it is, and make sure the post-sleep happens
+			// directly after the pre-sleep
+			var firstMessage = messages[0];
+			Assert.Contains("pre-sleep", firstMessage);
+			Assert.Equal(firstMessage.Replace("pre-sleep", "post-sleep"), messages[1]);
+
+			var thirdMessage = messages[2];
+			Assert.NotEqual(firstMessage, thirdMessage);
+			Assert.Contains("pre-sleep", thirdMessage);
+			Assert.Equal(thirdMessage.Replace("pre-sleep", "post-sleep"), messages[3]);
+			
+			async ValueTask<RunSummary> runTestCase(ICoreTest test)
+			{
+				messages.Add($"{test.TestDisplayName} pre-sleep");
+				
+				await Task.Delay(30, TestContext.Current.CancellationToken);
+				
+				messages.Add($"{test.TestDisplayName} post-sleep");
+
+				return new RunSummary { Total = 1 };
+			};
 		}
 	}
 
-	class TestableCoreTestCaseRunner(ICoreTestCase testCase) :
+	class TestableCoreTestCaseRunner:
 		CoreTestCaseRunner<TestableCoreTestCaseRunner.TestableContext, ICoreTestCase, ICoreTest>
 	{
 		public readonly ExceptionAggregator Aggregator = new();
 		public readonly CancellationTokenSource CancellationTokenSource = new();
 		public readonly SpyMessageBus MessageBus = new();
+		private readonly ICoreTest[] _tests;
+		private readonly Func<ICoreTest, ValueTask<RunSummary>>? _runTestLamda;
 
+		public TestableCoreTestCaseRunner(ICoreTestCase testCase)
+		{
+			_tests = [Mocks.CoreTest(testCase: testCase)];
+		}
+		
+		public TestableCoreTestCaseRunner(ICoreTest[] tests, Func<ICoreTest, ValueTask<RunSummary>>? runTestLamda)
+		{
+			_tests = tests;
+			_runTestLamda = runTestLamda;
+		}
+		
 		public async ValueTask<RunSummary> RunAsync()
 		{
+			Guard.ArgumentNotNullOrEmpty(_tests);
+			var testCase = _tests[0].TestCase;
+			
 			await using var ctxt = new TestableContext(
 				testCase,
-				[Mocks.CoreTest(testCase: testCase)],
+				_tests,
 				ExplicitOption.Off,
 				MessageBus,
 				Aggregator,
 				testCase.TestCaseDisplayName,
 				testCase.SkipReason,
-				CancellationTokenSource
+				CancellationTokenSource,
+				runTest: _runTestLamda ?? (_ => new ValueTask<RunSummary>(new RunSummary { Total = 1 }))
 			);
 			await ctxt.InitializeAsync();
 
@@ -131,11 +191,11 @@ public class CoreTestCaseRunnerTests
 			ExceptionAggregator aggregator,
 			string displayName,
 			string? skipReason,
-			CancellationTokenSource cancellationTokenSource) :
+			CancellationTokenSource cancellationTokenSource,
+			Func<ICoreTest, ValueTask<RunSummary>> runTest) :
 				CoreTestCaseRunnerContext<ICoreTestCase, ICoreTest>(testCase, tests, explicitOption, messageBus, aggregator, displayName, skipReason, cancellationTokenSource, parallelizationSemaphore: null)
 		{
-			public override ValueTask<RunSummary> RunTest(ICoreTest test) =>
-				new(new RunSummary { Total = 1 });
+			public override ValueTask<RunSummary> RunTest(ICoreTest test) => runTest(test);
 		}
 	}
 }

@@ -12,6 +12,7 @@ namespace Xunit.v3;
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="collectionFixtureMappings">The fixtures attached to the test collection</param>
+/// <param name="enableTestCaseParallelization">A value indicating whether test cases can be run in parallel.</param>
 /// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
@@ -24,6 +25,7 @@ public abstract class XunitTestClassRunnerBaseContext<TTestClass, TTestMethod, T
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
 	FixtureMappingManager collectionFixtureMappings,
+	bool enableTestCaseParallelization,
 	SemaphoreSlim? parallelizationSemaphore) :
 		CoreTestClassRunnerContext<TTestClass, TTestMethod, TTestCase>(testClass, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
 			where TTestClass : class, IXunitTestClass
@@ -57,6 +59,7 @@ public abstract class XunitTestClassRunnerBaseContext<TTestClass, TTestMethod, T
 				Aggregator.Clone(),
 				CancellationTokenSource,
 				ConstructorArguments ?? throw new InvalidOperationException("Constructor arguments were not set"),
+				enableTestCaseParallelization,
 				parallelizationSemaphore
 			);
 }

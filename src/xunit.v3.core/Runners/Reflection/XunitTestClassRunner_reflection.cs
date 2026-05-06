@@ -41,6 +41,7 @@ public class XunitTestClassRunner :
 		ExceptionAggregator aggregator,
 		CancellationTokenSource cancellationTokenSource,
 		FixtureMappingManager collectionFixtureMappings,
+		bool enableTestCaseParallelization,
 		SemaphoreSlim? parallelizationSemaphore = null)
 	{
 		Guard.ArgumentNotNull(testClass);

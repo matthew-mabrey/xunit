@@ -89,7 +89,7 @@ public class CoreTestCaseRunner<TContext, TTestCase, TTest> : TestCaseRunner<TCo
 
 		// only acquire the semaphore here if the collection has enabled test case parallelization, otherwise
 		// it is acquired when the test collection is started
-		var parallelizationSemaphore = ctxt.TestCase.TestCollection.EnableTestCaseParallelization
+		var parallelizationSemaphore = ctxt.EnableTestCaseParallelization
 			? ctxt.ParallelizationSemaphore
 			: null;
 		

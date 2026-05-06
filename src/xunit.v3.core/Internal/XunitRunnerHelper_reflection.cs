@@ -14,6 +14,7 @@ partial class XunitRunnerHelper
 	/// <param name="aggregator">The exception aggregator to record exceptions to</param>
 	/// <param name="explicitOption">A flag to indicate which types of tests to run (non-explicit, explicit, or both)</param>
 	/// <param name="constructorArguments">The arguments to pass to the test class constructor</param>
+	/// <param name="enableTestCaseParallelization">A value indicating whether test cases can be run in parallel.</param>
 	/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 	/// <returns></returns>
 	public static ValueTask<RunSummary> RunXunitTestCase(
@@ -23,6 +24,7 @@ partial class XunitRunnerHelper
 		ExceptionAggregator aggregator,
 		ExplicitOption explicitOption,
 		object?[] constructorArguments,
+		bool enableTestCaseParallelization = false,
 		SemaphoreSlim? parallelizationSemaphore = null) =>
 			RunCoreTestCase(
 				Guard.ArgumentNotNull(testCase),
@@ -39,6 +41,7 @@ partial class XunitRunnerHelper
 					testCase.SkipReason,
 					explicitOption,
 					constructorArguments,
+					enableTestCaseParallelization,
 					parallelizationSemaphore
 				),
 				cancellationTokenSource

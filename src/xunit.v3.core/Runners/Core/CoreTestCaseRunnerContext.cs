@@ -29,8 +29,9 @@ public abstract class CoreTestCaseRunnerContext<TTestCase, TTest>(
 	ExceptionAggregator aggregator,
 	string displayName,
 	string? skipReason,
-	CancellationTokenSource cancellationTokenSource,
-	SemaphoreSlim? parallelizationSemaphore) :
+	bool enableTestCaseParallelization,
+	SemaphoreSlim? parallelizationSemaphore,
+	CancellationTokenSource cancellationTokenSource) :
 		TestCaseRunnerContext<TTestCase, TTest>(testCase, explicitOption, messageBus, aggregator, cancellationTokenSource)
 			where TTestCase : class, ICoreTestCase
 			where TTest : class, ICoreTest
@@ -52,6 +53,11 @@ public abstract class CoreTestCaseRunnerContext<TTestCase, TTest>(
 	/// </summary>
 #endif
 	public string? SkipReason { get; } = skipReason;
+	
+	/// <summary>
+	/// A value indicating whether test cases can be run in parallel.
+	/// </summary>
+	public bool EnableTestCaseParallelization { get; } = enableTestCaseParallelization;
 	
 	/// <summary>
 	/// Gets the semaphore used to limit parallelization within the execution pipeline.

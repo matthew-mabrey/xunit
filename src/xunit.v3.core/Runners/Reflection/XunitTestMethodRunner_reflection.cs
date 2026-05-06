@@ -31,6 +31,7 @@ public class XunitTestMethodRunner : XunitTestMethodRunnerBase<XunitTestMethodRu
 	/// <param name="aggregator">The exception aggregator used to run code and collect exceptions.</param>
 	/// <param name="cancellationTokenSource">The task cancellation token source, used to cancel the test run.</param>
 	/// <param name="constructorArguments">The constructor arguments for the test class.</param>
+	/// <param name="enableTestCaseParallelization">A value indicating whether test cases can be run in parallel.</param>
 	/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 	public async ValueTask<RunSummary> Run(
 		IXunitTestMethod testMethod,
@@ -40,6 +41,7 @@ public class XunitTestMethodRunner : XunitTestMethodRunnerBase<XunitTestMethodRu
 		ExceptionAggregator aggregator,
 		CancellationTokenSource cancellationTokenSource,
 		object?[] constructorArguments,
+		bool enableTestCaseParallelization = false,
 		SemaphoreSlim? parallelizationSemaphore = null)
 	{
 		Guard.ArgumentNotNull(testCases);
@@ -54,6 +56,7 @@ public class XunitTestMethodRunner : XunitTestMethodRunnerBase<XunitTestMethodRu
 			aggregator,
 			cancellationTokenSource,
 			constructorArguments,
+			enableTestCaseParallelization,
 			parallelizationSemaphore
 		);
 		await ctxt.InitializeAsync();
