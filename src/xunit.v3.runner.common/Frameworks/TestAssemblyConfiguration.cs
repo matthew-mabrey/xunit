@@ -30,9 +30,7 @@ public class TestAssemblyConfiguration
 		TestMethodDisplay? methodDisplay,
 		TestMethodDisplayOptions? methodDisplayOptions,
 		ParallelAlgorithm? parallelAlgorithm,
-		bool? parallelizeAssembly,
-		bool? parallelizeTestCollections,
-		bool? parallelizeTestCases,
+		ParallelizationOptions? parallelizationOptions,
 		bool? preEnumerateTheories,
 		int? printMaxEnumerableLength,
 		int? printMaxObjectDepth,
@@ -60,9 +58,7 @@ public class TestAssemblyConfiguration
 		MethodDisplay = methodDisplay;
 		MethodDisplayOptions = methodDisplayOptions;
 		ParallelAlgorithm = parallelAlgorithm;
-		ParallelizeAssembly = parallelizeAssembly;
-		ParallelizeTestCollections = parallelizeTestCollections;
-		ParallelizeTestCases = parallelizeTestCases;
+		ParallelizationOptions = parallelizationOptions;
 		PreEnumerateTheories = preEnumerateTheories;
 		PrintMaxEnumerableLength = printMaxEnumerableLength;
 		PrintMaxObjectDepth = printMaxObjectDepth;
@@ -240,42 +236,17 @@ public class TestAssemblyConfiguration
 	public ParallelAlgorithm ParallelAlgorithmOrDefault => ParallelAlgorithm ?? Sdk.ParallelAlgorithm.Conservative;
 
 	/// <summary>
-	/// Gets or sets a flag indicating that this assembly is safe to parallelize against
-	/// other assemblies.
-	/// </summary>
-	public bool? ParallelizeAssembly { get; set; }
-
-	/// <summary>
-	/// Gets a flag indicating that this assembly is safe to parallelize against
-	/// other assemblies. If the flag is not set, returns the default value (<see langword="false"/>).
-	/// </summary>
-	public bool ParallelizeAssemblyOrDefault => ParallelizeAssembly ?? false;
-
-	/// <summary>
-	/// Gets or sets a flag indicating that this test assembly wants to run test collections
-	/// in parallel against one another.
-	/// </summary>
-	public bool? ParallelizeTestCollections { get; set; }
-
-	/// <summary>
-	/// Gets a flag indicating that this test assembly wants to run test collections
-	/// in parallel against one another. If the flag is not set, returns the default
-	/// value (<see langword="true"/>).
-	/// </summary>
-	public bool ParallelizeTestCollectionsOrDefault => ParallelizeTestCollections ?? true;
-
-	/// <summary>
 	/// Gets or sets a flag indicating that this test assembly wants to run all test cases
 	/// in parallel against one another.
 	/// </summary>
-	public bool? ParallelizeTestCases { get; set; }
+	public ParallelizationOptions? ParallelizationOptions { get; set; }
 
 	/// <summary>
 	/// Gets a flag indicating that this test assembly wants to run all test cases
 	/// in parallel against one another. If the flag is not set, returns the default
 	/// value (<see langword="false"/>).
 	/// </summary>
-	public bool ParallelizeTestCasesOrDefault => ParallelizeTestCases ?? false;
+	public ParallelizationOptions ParallelizationOptionsOrDefault => ParallelizationOptions ?? Xunit.Sdk.ParallelizationOptions.Default;
 
 	/// <summary>
 	/// Gets or sets a flag indicating whether theory data should be pre-enumerated during

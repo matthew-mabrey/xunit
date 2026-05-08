@@ -1,3 +1,5 @@
+using Xunit.Sdk;
+
 namespace Xunit.v3;
 
 /// <summary>
@@ -17,8 +19,7 @@ public class CollectionPerClassTestCollectionFactory(IXunitTestAssembly testAsse
 		new XunitTestCollection(
 			TestAssembly,
 			collectionDefinition: null,
-			disableParallelization: false,
-			enableTestCaseParallelization: false,
+			parallelizationOptions: ParallelizationOptions.Default,
 			CollectionAttribute.GetCollectionNameForType(testClass)
 		);
 }

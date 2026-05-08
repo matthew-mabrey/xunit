@@ -3,6 +3,7 @@ using System.Reflection;
 using Xunit;
 using Xunit.Runner.Common;
 using Xunit.Runner.InProc.SystemConsole;
+using Xunit.Sdk;
 
 public class CommandLineTests
 {
@@ -435,7 +436,7 @@ public class CommandLineTests
 
 				var assembly = commandLine.Parse();
 
-				Assert.Null(assembly.Configuration.ParallelizeTestCollections);
+				Assert.Null(assembly.Configuration.ParallelizationOptions);
 			}
 
 			[Fact]
@@ -453,17 +454,17 @@ public class CommandLineTests
 			}
 
 			[Theory]
-			[InlineData("none", false)]
-			[InlineData("collections", true)]
+			[InlineData("none", ParallelizationOptions.Disabled)]
+			[InlineData("collections", ParallelizationOptions.Collections)]
 			public static void ParallelCanBeTurnedOn(
 				string parallelOption,
-				bool expectedCollectionsParallelization)
+				ParallelizationOptions expected)
 			{
 				var commandLine = new TestableCommandLine("no-config.json", "-parallel", parallelOption);
 
 				var assembly = commandLine.Parse();
 
-				Assert.Equal(expectedCollectionsParallelization, assembly.Configuration.ParallelizeTestCollections);
+				Assert.Equal(expected, assembly.Configuration.ParallelizationOptions);
 			}
 		}
 

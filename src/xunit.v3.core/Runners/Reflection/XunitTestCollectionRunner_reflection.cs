@@ -25,7 +25,7 @@ public class XunitTestCollectionRunner :
 	public static XunitTestCollectionRunner Instance { get; } = new();
 
 	/// <summary>
-	/// Please call <see cref="Run(IXunitTestCollection, IReadOnlyCollection{IXunitTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager, bool, SemaphoreSlim?)"/>.
+	/// Please call <see cref="Run(IXunitTestCollection, IReadOnlyCollection{IXunitTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager, ParallelizationOptions, SemaphoreSlim?)"/>.
 	/// This overload will be removed in the next major version.
 	/// </summary>
 	[Obsolete("Please use the overload without testCaseOrderer. This overload will be removed in the next major version.")]
@@ -48,7 +48,7 @@ public class XunitTestCollectionRunner :
 				aggregator,
 				cancellationTokenSource,
 				assemblyFixtureMappings,
-				enableTestCaseParallelization: false,
+				parallelizationOptions: ParallelizationOptions.Default,
 				parallelizationSemaphore: null
 			);
 
@@ -62,7 +62,7 @@ public class XunitTestCollectionRunner :
 	/// <param name="aggregator">The exception aggregator used to run code and collection exceptions.</param>
 	/// <param name="cancellationTokenSource">The task cancellation token source, used to cancel the test run.</param>
 	/// <param name="assemblyFixtureMappings">The mapping manager for assembly fixtures.</param>
-	/// <param name="enableTestCaseParallelization">Whether to run test cases in parallel.</param>
+	/// <param name="parallelizationOptions">Options to determine how much parallelization to use within the test execution pipeline.</param>
 	/// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 	public async ValueTask<RunSummary> Run(
 		IXunitTestCollection testCollection,
@@ -72,7 +72,7 @@ public class XunitTestCollectionRunner :
 		ExceptionAggregator aggregator,
 		CancellationTokenSource cancellationTokenSource,
 		FixtureMappingManager assemblyFixtureMappings,
-		bool enableTestCaseParallelization = false,
+		ParallelizationOptions parallelizationOptions = ParallelizationOptions.Default,
 		SemaphoreSlim? parallelizationSemaphore = null)
 	{
 		Guard.ArgumentNotNull(testCollection);
@@ -89,7 +89,7 @@ public class XunitTestCollectionRunner :
 			aggregator,
 			cancellationTokenSource,
 			assemblyFixtureMappings,
-			enableTestCaseParallelization,
+			parallelizationOptions,
 			parallelizationSemaphore
 		);
 		await ctxt.InitializeAsync();

@@ -16,14 +16,9 @@ namespace Xunit.v3;
 public interface ICoreTestCollection : ITestCollection
 {
 	/// <summary>
-	/// Determines whether tests in this collection runs in parallel with any other collections.
+	/// Options to determine parallelization within the test execution pipeline.
 	/// </summary>
-	bool DisableParallelization { get; }
-	
-	/// <summary>
-	/// Determines whether test cases in this collection can run in parallel.
-	/// </summary>
-	bool EnableTestCaseParallelization { get; set; }
+	ParallelizationOptions ParallelizationOptions { get; set; }
 
 	/// <summary>
 	/// Gets the test assembly this test collection belongs to.

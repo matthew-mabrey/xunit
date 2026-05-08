@@ -235,7 +235,7 @@ public class XunitTestCaseRunnerTests
 				test.TestCase.SkipReason,
 				ExplicitOption.Off,
 				[],
-				enableTestCaseParallelization: false,
+				parallelizationOptions: ParallelizationOptions.Default,
 				parallelizationSemaphore: null
 			);
 			await ctxt.InitializeAsync();

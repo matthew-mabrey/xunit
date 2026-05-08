@@ -1,6 +1,7 @@
 using Xunit;
 using Xunit.Runner.Common;
 using Xunit.Sdk;
+using Xunit.v3;
 
 public class XunitProjectAssemblyTests
 {
@@ -32,8 +33,7 @@ public class XunitProjectAssemblyTests
 			executionOptions = TestFrameworkOptions.ForExecutionFromSerialization("{}");
 			executionOptions.SetCulture("ef-GH");
 			executionOptions.SetDiagnosticMessages(false);
-			executionOptions.SetDisableParallelization(true);  // true instead of false because it's inverted in the result
-			executionOptions.SetEnableTestCaseParallelization(true);
+			executionOptions.SetParallelizationOptions(ParallelizationOptions.Disabled);
 			executionOptions.SetExplicitOption(ExplicitOption.On);
 			executionOptions.SetFailSkips(false);
 			executionOptions.SetFailTestsWithWarnings(false);
@@ -101,8 +101,7 @@ public class XunitProjectAssemblyTests
 			Assert.Equal(ParallelAlgorithm.Aggressive, updatedAssembly.Configuration.ParallelAlgorithm);
 			Assert.Equal(TestMethodDisplay.Method, updatedAssembly.Configuration.MethodDisplay);
 			Assert.Equal(TestMethodDisplayOptions.ReplaceUnderscoreWithSpace, updatedAssembly.Configuration.MethodDisplayOptions);
-			Assert.False(updatedAssembly.Configuration.ParallelizeAssembly);
-			Assert.False(updatedAssembly.Configuration.ParallelizeTestCollections);
+			Assert.Null(updatedAssembly.Configuration.ParallelizationOptions);
 			Assert.True(updatedAssembly.Configuration.PreEnumerateTheories);
 			Assert.Equal(21, updatedAssembly.Configuration.PrintMaxEnumerableLength);
 			Assert.Equal(43, updatedAssembly.Configuration.PrintMaxObjectDepth);
@@ -140,8 +139,7 @@ public class XunitProjectAssemblyTests
 			Assert.False(updatedAssembly.Configuration.InternalDiagnosticMessages);
 			Assert.Equal(2112, updatedAssembly.Configuration.MaxParallelThreads);
 			Assert.Equal(ParallelAlgorithm.Aggressive, updatedAssembly.Configuration.ParallelAlgorithm);
-			Assert.False(updatedAssembly.Configuration.ParallelizeAssembly);
-			Assert.False(updatedAssembly.Configuration.ParallelizeTestCollections);
+			Assert.Null(updatedAssembly.Configuration.ParallelizationOptions);
 			Assert.Equal(21, updatedAssembly.Configuration.PrintMaxEnumerableLength);
 			Assert.Equal(43, updatedAssembly.Configuration.PrintMaxObjectDepth);
 			Assert.Equal(65, updatedAssembly.Configuration.PrintMaxObjectMemberCount);

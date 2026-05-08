@@ -40,7 +40,7 @@ public class XunitTestAssemblyTests(XunitTestAssemblyTests.XunitTestAssemblyFixt
 
 		Assert.NotNull(behavior);
 		Assert.True(behavior.DisableTestParallelization);
-		Assert.False(behavior.EnableTestCaseParallelization);
+		Assert.Equal(ParallelizationOptions.Disabled, behavior.ParallelizationOptions);
 		Assert.Equal(42, behavior.MaxParallelThreads);
 	}
 

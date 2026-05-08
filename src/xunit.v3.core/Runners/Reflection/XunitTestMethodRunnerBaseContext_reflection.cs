@@ -12,7 +12,7 @@ namespace Xunit.v3;
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="constructorArguments">The constructor arguments for the test class</param>
-/// <param name="enableTestCaseParallelization">A value indicating whether test cases can be run in parallel.</param>
+/// <param name="parallelizationOptions">A value indicating whether test cases can be run in parallel.</param>
 /// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
@@ -25,9 +25,9 @@ public class XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>(
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
 	object?[] constructorArguments,
-	bool enableTestCaseParallelization,
+	ParallelizationOptions parallelizationOptions,
 	SemaphoreSlim? parallelizationSemaphore) :
-		CoreTestMethodRunnerContext<TTestMethod, TTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, enableTestCaseParallelization, cancellationTokenSource)
+		CoreTestMethodRunnerContext<TTestMethod, TTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, parallelizationOptions, cancellationTokenSource)
 			where TTestMethod : class, IXunitTestMethod
 			where TTestCase : class, IXunitTestCase
 {
@@ -49,7 +49,7 @@ public class XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>(
 			Aggregator.Clone(),
 			ExplicitOption,
 			ConstructorArguments,
-			EnableTestCaseParallelization,
+			ParallelizationOptions,
 			parallelizationSemaphore
 		);
 	}

@@ -97,8 +97,8 @@ public sealed class CodeGenTestAssembly : ICodeGenTestAssembly
 		collectionBehavior?.DisableTestParallelization;
 
 	/// <inheritdoc/>
-	public bool? EnableTestCaseParallelization =>
-		collectionBehavior?.EnableTestCaseParallelization;
+	public ParallelizationOptions? ParallelizationOptions =>
+		collectionBehavior?.ParallelizationOptions;
 
 	/// <inheritdoc/>
 	public int? MaxParallelThreads =>

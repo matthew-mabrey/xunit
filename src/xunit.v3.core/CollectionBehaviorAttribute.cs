@@ -52,7 +52,7 @@ public sealed class CollectionBehaviorAttribute : Attribute
 	public bool DisableTestParallelization { get; set; }
 
 	/// <inheritdoc/>
-	public bool EnableTestCaseParallelization { get; set; }
+	public ParallelizationOptions ParallelizationOptions { get; set; }
 
 	/// <inheritdoc/>
 	public int MaxParallelThreads { get; set; }

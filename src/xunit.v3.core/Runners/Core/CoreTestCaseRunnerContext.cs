@@ -13,7 +13,7 @@ namespace Xunit.v3;
 /// <param name="displayName">The display name of the test case</param>
 /// <param name="skipReason">The skip reason, if the test case is being skipped</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
-/// <param name="enableTestCaseParallelization">Whether to run test cases in parallel.</param>
+/// <param name="parallelizationOptions">Options to determine how much parallelization to use within the test execution pipeline.</param>
 /// <param name="parallelizationSemaphore">The semaphore used to limit parallelization within the execution pipeline.</param>
 /// <typeparam name="TTestCase">The type of the test case used by the test framework. Must
 /// derive from <see cref="ICoreTestCase"/>.</typeparam>
@@ -30,7 +30,7 @@ public abstract class CoreTestCaseRunnerContext<TTestCase, TTest>(
 	ExceptionAggregator aggregator,
 	string displayName,
 	string? skipReason,
-	bool enableTestCaseParallelization,
+	ParallelizationOptions parallelizationOptions,
 	SemaphoreSlim? parallelizationSemaphore,
 	CancellationTokenSource cancellationTokenSource) :
 		TestCaseRunnerContext<TTestCase, TTest>(testCase, explicitOption, messageBus, aggregator, cancellationTokenSource)
@@ -58,7 +58,7 @@ public abstract class CoreTestCaseRunnerContext<TTestCase, TTest>(
 	/// <summary>
 	/// A value indicating whether test cases can be run in parallel.
 	/// </summary>
-	public bool EnableTestCaseParallelization { get; } = enableTestCaseParallelization;
+	public ParallelizationOptions ParallelizationOptions { get; } = parallelizationOptions;
 	
 	/// <summary>
 	/// Gets the semaphore used to limit parallelization within the execution pipeline.

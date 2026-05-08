@@ -112,7 +112,7 @@ public class XunitTestAssembly : IXunitTestAssembly, IXunitSerializable
 		CollectionBehavior?.DisableTestParallelization;
 
 	/// <inheritdoc/>
-	public bool? EnableTestCaseParallelization => CollectionBehavior?.EnableTestCaseParallelization;
+	public ParallelizationOptions? ParallelizationOptions => CollectionBehavior?.ParallelizationOptions;
 
 	/// <inheritdoc/>
 	public int? MaxParallelThreads =>

@@ -2,6 +2,7 @@ using Xunit;
 using Xunit.Runner.Common;
 using Xunit.Runner.v3;
 using Xunit.Sdk;
+using Xunit.v3;
 
 public class Xunit3ArgumentFactoryTests
 {
@@ -260,7 +261,7 @@ public class Xunit3ArgumentFactoryTests
 				assertEquivalentMaxDepth: 5,
 				culture: culture,
 				diagnosticMessages: true,
-				disableParallelization: true,
+				parallelizationOptions: ParallelizationOptions.Disabled,
 				explicitOption: ExplicitOption.On,
 				failSkips: true,
 				failTestsWithWarnings: true,
@@ -498,7 +499,7 @@ public class Xunit3ArgumentFactoryTests
 				assertEquivalentMaxDepth: 5,
 				culture: culture,
 				diagnosticMessages: true,
-				disableParallelization: true,
+				parallelizationOptions: ParallelizationOptions.Disabled,
 				explicitOption: ExplicitOption.On,
 				failSkips: true,
 				failTestsWithWarnings: true,

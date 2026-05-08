@@ -36,14 +36,8 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 	/// <summary>
 	/// Gets a flag which indicates whether the user has requested that parallelization be disabled.
 	/// </summary>
-	public virtual bool DisableParallelization =>
-		ExecutionOptions.DisableParallelization() ?? TestAssembly.DisableParallelization ?? false;
-
-	/// <summary>
-	/// Gets a flag which indicates whether to enable or disable parallelization of test cases in all collections.
-	/// </summary>
-	public virtual bool? EnableTestCaseParallelization =>
-		ExecutionOptions.EnableTestCaseParallelization() ?? TestAssembly.EnableTestCaseParallelization;
+	public virtual ParallelizationOptions? ParallelizationOptions =>
+		ExecutionOptions.ParallelizationOptions() ?? TestAssembly.ParallelizationOptions;
 
 	/// <summary>
 	/// Gets a flag which indicates how explicit tests should be handled.
@@ -100,7 +94,7 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 				"{0} [{1}, {2}]",
 				base.TestEnvironment,
 				GetTestCollectionFactoryDisplayName(),
-				DisableParallelization
+				ParallelizationOptions == Xunit.Sdk.ParallelizationOptions.Disabled
 					? "non-parallel"
 					: string.Format(CultureInfo.CurrentCulture, "parallel ({0})", threadCountText)
 			);
@@ -112,10 +106,6 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 	/// </summary>
 	public void AfterTestCollection()
 	{
-		if (EnableTestCaseParallelization != true)
-		{
-			ParallelizationSemaphore?.Release();
-		}
 	}
 
 	/// <summary>
@@ -123,8 +113,6 @@ public abstract class CoreTestAssemblyRunnerContext<TTestAssembly, TTestCollecti
 	/// </summary>
 	public async ValueTask BeforeTestCollection()
 	{
-		if (EnableTestCaseParallelization != true && ParallelizationSemaphore is not null)
-			await ParallelizationSemaphore.WaitAsync(TestContext.Current.CancellationToken);
 	}
 
 	/// <inheritdoc/>

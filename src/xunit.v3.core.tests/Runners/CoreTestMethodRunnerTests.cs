@@ -79,7 +79,7 @@ public class CoreTestMethodRunnerTests
 			
 			var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
 			var completionTask = Task.WhenAny(timeoutTask, Task.WhenAll(testCaseTcs1.Task, testCaseTcs2.Task));
-			var runner = new TestableCoreTestMethodRunner([testCase1, testCase2], runTestCase, enableTestCaseParallelization: true);
+			var runner = new TestableCoreTestMethodRunner([testCase1, testCase2], runTestCase, parallelizationOptions: ParallelizationOptions.All);
 
 			await runner.RunAsync();
 			
@@ -108,7 +108,7 @@ public class CoreTestMethodRunnerTests
 			var testCase1 = Mocks.CoreTestCase(testCaseDisplayName: "TestCase1", testMethod: testMethod);
 			var testCase2 = Mocks.CoreTestCase(testCaseDisplayName: "TestCase2", testMethod: testMethod);
 
-			var runner = new TestableCoreTestMethodRunner([testCase1, testCase2], runTestCaseLamda: runTestCase, enableTestCaseParallelization: false);
+			var runner = new TestableCoreTestMethodRunner([testCase1, testCase2], runTestCaseLamda: runTestCase);
 
 			await runner.RunAsync();
 			
@@ -144,7 +144,7 @@ public class CoreTestMethodRunnerTests
 		}
 	}
 
-	class TestableCoreTestMethodRunner(ICoreTestCase[] testCases, Func<ICoreTestCase, ValueTask<RunSummary>>? runTestCaseLamda = null, bool enableTestCaseParallelization = false) :
+	class TestableCoreTestMethodRunner(ICoreTestCase[] testCases, Func<ICoreTestCase, ValueTask<RunSummary>>? runTestCaseLamda = null, ParallelizationOptions parallelizationOptions = ParallelizationOptions.Default) :
 		CoreTestMethodRunner<TestableCoreTestMethodRunner.TestableContext, ICoreTestMethod, ICoreTestCase>
 	{
 		public ExceptionAggregator Aggregator = new();
@@ -160,7 +160,7 @@ public class CoreTestMethodRunnerTests
 				ExplicitOption.Off,
 				MessageBus,
 				Aggregator,
-				enableTestCaseParallelization,
+				parallelizationOptions,
 				runTestCaseLamda ?? (_ => new(new RunSummary { Total = 1, })),
 				CancellationTokenSource
 			);
@@ -184,10 +184,10 @@ public class CoreTestMethodRunnerTests
 			ExplicitOption explicitOption,
 			IMessageBus messageBus,
 			ExceptionAggregator aggregator,
-			bool enableTestCaseParallelization,
+			ParallelizationOptions parallelizationOptions,
 			Func<ICoreTestCase, ValueTask<RunSummary>> runTestCaseLamda,
 			CancellationTokenSource cancellationTokenSource) :
-				CoreTestMethodRunnerContext<ICoreTestMethod, ICoreTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, enableTestCaseParallelization, cancellationTokenSource)
+				CoreTestMethodRunnerContext<ICoreTestMethod, ICoreTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, parallelizationOptions, cancellationTokenSource)
 		{
 			public override ValueTask<RunSummary> RunTestCase(ICoreTestCase testCase) => runTestCaseLamda(testCase);
 		}

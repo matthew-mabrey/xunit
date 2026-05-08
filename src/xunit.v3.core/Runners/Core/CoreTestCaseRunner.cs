@@ -1,3 +1,4 @@
+using Xunit.Sdk;
 using Xunit.v3.Utility;
 
 namespace Xunit.v3;
@@ -38,7 +39,7 @@ public class CoreTestCaseRunner<TContext, TTestCase, TTest> : TestCaseRunner<TCo
 		}
 
 		var summary = new RunSummary();
-		if (ctxt.EnableTestCaseParallelization)
+		if (ctxt.ParallelizationOptions.HasFlag(ParallelizationOptions.Tests))
 		{
 			var taskRunner = TestPipelineTaskRunner.Create(ctxt.CancellationTokenSource.Token);
 			List<ValueTask<RunSummary>> parallel = [];
@@ -87,15 +88,9 @@ public class CoreTestCaseRunner<TContext, TTestCase, TTest> : TestCaseRunner<TCo
 	{
 		Guard.ArgumentNotNull(ctxt);
 
-		// only acquire the semaphore here if the collection has enabled test case parallelization, otherwise
-		// it is acquired when the test collection is started
-		var parallelizationSemaphore = ctxt.EnableTestCaseParallelization
-			? ctxt.ParallelizationSemaphore
-			: null;
-		
-		if (parallelizationSemaphore != null)
+		if (ctxt.ParallelizationSemaphore != null)
 		{
-			await parallelizationSemaphore.WaitAsync(ctxt.CancellationTokenSource.Token);
+			await ctxt.ParallelizationSemaphore.WaitAsync(ctxt.CancellationTokenSource.Token);
 		}
 
 		try
@@ -104,7 +99,7 @@ public class CoreTestCaseRunner<TContext, TTestCase, TTest> : TestCaseRunner<TCo
 		}
 		finally
 		{
-			parallelizationSemaphore?.Release();
+			ctxt.ParallelizationSemaphore?.Release();
 		}
 	}
 }

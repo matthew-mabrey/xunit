@@ -1,3 +1,5 @@
+using Xunit.Sdk;
+
 namespace Xunit.v3;
 
 /// <summary>
@@ -19,8 +21,7 @@ public class CollectionPerAssemblyTestCollectionFactory : TestCollectionFactoryB
 			defaultCollection = new XunitTestCollection(
 				testAssembly,
 				collectionDefinition: null,
-				disableParallelization: false,
-				enableTestCaseParallelization: false,
+				parallelizationOptions: ParallelizationOptions.Default,
 				"Test collection for " + TestAssembly.AssemblyName
 			);
 

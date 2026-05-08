@@ -300,7 +300,7 @@ public static partial class Mocks
 		IReadOnlyCollection<IBeforeAfterTestAttribute>? beforeAfterTestAttributes = null,
 		IReadOnlyCollection<Type>? classFixtureTypes = null,
 		IReadOnlyCollection<Type>? collectionFixtureTypes = null,
-		bool disableParallelization = false,
+		ParallelizationOptions parallelizationOptions = ParallelizationOptions.Default,
 		IXunitTestAssembly? testAssembly = null,
 		ITestCaseOrderer? testCaseOrderer = null,
 		ITestClassOrderer? testClassOrderer = null,
@@ -317,7 +317,7 @@ public static partial class Mocks
 		result.ClassFixtureTypes.Returns(classFixtureTypes ?? []);
 		result.CollectionDefinition.Throws(new InvalidOperationException("Using IXunitTestCollection.CollectionDefinition while testing is prohibited"));
 		result.CollectionFixtureTypes.Returns(collectionFixtureTypes ?? []);
-		result.DisableParallelization.Returns(disableParallelization);
+		result.ParallelizationOptions.Returns(parallelizationOptions);
 		result.TestAssembly.Returns(testAssembly);
 		result.TestCaseOrderer.Returns(testCaseOrderer);
 		result.TestClassOrderer.Returns(testClassOrderer);

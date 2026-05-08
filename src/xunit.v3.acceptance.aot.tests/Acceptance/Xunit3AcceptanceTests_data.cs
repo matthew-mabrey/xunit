@@ -381,7 +381,7 @@ public partial class Xunit3AcceptanceTests
 			public void Test2() { }
 		}
 
-		[CollectionDefinition("Non-Parallel Collection", DisableParallelization = true)]
+		[CollectionDefinition("Non-Parallel Collection", ParallelizationOptions = ParallelizationOptions.Disabled)]
 		[TestMethodOrderer(typeof(AlphabeticalMethodOrderer))]
 		public class TestClassNonParallelCollectionDefinition { }
 
@@ -401,7 +401,7 @@ public partial class Xunit3AcceptanceTests
 
 	public partial class TestNonParallelTestCaseOrdering
 	{
-		[CollectionDefinition("Parallel Test Case Collection", EnableTestCaseParallelization = true)]
+		[CollectionDefinition("Parallel Test Case Collection", ParallelizationOptions = ParallelizationOptions.All)]
 		[TestMethodOrderer(typeof(AlphabeticalMethodOrderer))]
 		public class TestClassParallelTestCaseCollectionDefinition { }
 

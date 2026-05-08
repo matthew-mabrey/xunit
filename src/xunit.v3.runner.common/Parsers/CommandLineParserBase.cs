@@ -649,18 +649,17 @@ public abstract class CommandLineParserBase
 		if (!Enum.TryParse(option.Value, ignoreCase: true, out ParallelismOption parallelismOption))
 			throw new ArgumentException("incorrect argument value for -parallel");
 
-		var (parallelizeAssemblies, parallelizeTestCollections) = parallelismOption switch
+		var parallelizationOptions = parallelismOption switch
 		{
-			ParallelismOption.all => (true, true),
-			ParallelismOption.assemblies => (true, false),
-			ParallelismOption.collections => (false, true),
-			_ => (false, false)
+			ParallelismOption.all => ParallelizationOptions.All,
+			ParallelismOption.assemblies => ParallelizationOptions.Assemblies,
+			ParallelismOption.collections => ParallelizationOptions.Collections,
+			_ =>  ParallelizationOptions.Default,
 		};
 
 		foreach (var projectAssembly in Project.Assemblies)
 		{
-			projectAssembly.Configuration.ParallelizeAssembly = parallelizeAssemblies;
-			projectAssembly.Configuration.ParallelizeTestCollections = parallelizeTestCollections;
+			projectAssembly.Configuration.ParallelizationOptions = parallelizationOptions;
 		}
 	}
 

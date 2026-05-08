@@ -25,7 +25,7 @@ public class CodeGenTestClassRunnerContext : CoreTestClassRunnerContext<ICodeGen
 		ExceptionAggregator aggregator,
 		CancellationTokenSource cancellationTokenSource,
 		FixtureMappingManager collectionFixtureMappings) :
-			base(testClass, testCases, explicitOption, messageBus, aggregator, enableTestCaseParallelization: false, cancellationTokenSource)
+			base(testClass, testCases, explicitOption, messageBus, aggregator, parallelizationOptions: ParallelizationOptions.Default, cancellationTokenSource)
 	{
 		var classFixtureFactories = new Dictionary<Type, Func<FixtureMappingManager?, ValueTask<object>>>(Guard.ArgumentNotNull(testClass).TestCollection.ClassFixtureFactories);
 		foreach (var classLevelFactory in testClass.ClassFixtureFactories)

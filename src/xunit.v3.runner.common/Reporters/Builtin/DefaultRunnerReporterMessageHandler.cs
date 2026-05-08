@@ -351,15 +351,14 @@ public class DefaultRunnerReporterMessageHandler : TestMessageSink, IRunnerRepor
 		{
 			var threadCount = executionStarting.ExecutionOptions.GetMaxParallelThreadsOrDefault();
 			var parallelAlgorithm = executionStarting.ExecutionOptions.GetParallelAlgorithmOrDefault();
-			var parallelizationMode = executionStarting.ExecutionOptions.GetEnableTestCaseParallelizationOrDefault()
-				? "parallel test cases"
-				: "parallel test collections";
+			var parallelizationOptions = executionStarting.ExecutionOptions.GetParallelizationOptionsOrDefault();
 			var parallelizationSettings =
-				executionStarting.ExecutionOptions.GetDisableParallelizationOrDefault()
+				parallelizationOptions == ParallelizationOptions.Disabled
 					? "off"
 					: string.Format(
 						CultureInfo.CurrentCulture,
-						"on [{0} thread{1}{2}]",
+						"on [options {0}] [{1} thread{2}{3}]",
+						parallelizationOptions,
 						threadCount < 0 ? "unlimited" : threadCount.ToString(CultureInfo.CurrentCulture),
 						threadCount == 1 ? string.Empty : "s",
 						threadCount > 0 && parallelAlgorithm == ParallelAlgorithm.Aggressive ? "/aggressive" : string.Empty
@@ -372,9 +371,8 @@ public class DefaultRunnerReporterMessageHandler : TestMessageSink, IRunnerRepor
 				culture = "invariant";
 
 			Logger.LogImportantMessage(
-				"  Starting:    {0} ({1} = {2}, stop on fail = {3}, explicit = {4}{5}{6})",
+				"  Starting:    {0} (parallel = {1}, stop on fail = {2}, explicit = {3}{4}{5})",
 				assemblyDisplayName,
-				parallelizationMode,
 				parallelizationSettings,
 				executionStarting.ExecutionOptions.GetStopOnTestFailOrDefault() ? "on" : "off",
 				@explicit,

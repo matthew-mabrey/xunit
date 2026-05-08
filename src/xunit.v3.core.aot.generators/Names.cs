@@ -6,8 +6,7 @@ public static class Names
 	{
 		public static class CollectionDefinitionAttribute
 		{
-			public const string DisableParallelization = nameof(DisableParallelization);
-			public const string EnableTestCaseParallelization = nameof(EnableTestCaseParallelization);
+			public const string ParallelizationOptions = nameof(ParallelizationOptions);
 		}
 
 		public static class Internal

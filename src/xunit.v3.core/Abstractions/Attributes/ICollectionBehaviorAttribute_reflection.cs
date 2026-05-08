@@ -21,7 +21,7 @@ public interface ICollectionBehaviorAttribute
 	/// <summary>
 	/// Determines whether test cases in all test collections in this assembly can run in parallel.
 	/// </summary>
-	bool EnableTestCaseParallelization { get; }
+	ParallelizationOptions ParallelizationOptions { get; }
 
 	/// <summary>
 	/// Determines how many tests can run in parallel with each other. If set to 0, the system will

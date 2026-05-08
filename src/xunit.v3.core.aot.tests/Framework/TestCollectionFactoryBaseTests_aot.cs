@@ -1,4 +1,5 @@
 using Xunit;
+using Xunit.Sdk;
 using Xunit.v3;
 
 public class TestCollectionFactoryBaseTests
@@ -29,8 +30,7 @@ public class TestCollectionFactoryBaseTests
 		Assert.Empty(testCollection.BeforeAfterTestAttributes);
 		Assert.Empty(testCollection.ClassFixtureFactories);
 		Assert.Empty(testCollection.CollectionFixtureFactories);
-		Assert.False(testCollection.DisableParallelization);
-		Assert.False(testCollection.EnableTestCaseParallelization);
+		Assert.NotEqual(ParallelizationOptions.Disabled, testCollection.ParallelizationOptions);
 		Assert.Same(testAssembly, testCollection.TestAssembly);
 		Assert.Null(testCollection.TestCaseOrderer);
 		Assert.Equal(testCollectionClassName, testCollection.TestCollectionClassName);
@@ -49,15 +49,14 @@ public class TestCollectionFactoryBaseTests
 	{
 		var collectionDefinitions = new Dictionary<string, CodeGenTestCollectionRegistration>()
 		{
-			["foo"] = new() { DisableParallelization = true, EnableTestCaseParallelization = true }
+			["foo"] = new() { ParallelizationOptions = ParallelizationOptions.Disabled }
 		};
 		var testAssembly = Mocks.CodeGenTestAssembly(collectionDefinitions: collectionDefinitions);
 		var factory = new TestableTestCollectionFactory(testAssembly);
 
 		var testCollection = factory.Get(typeof(TestClassForParallelization));
 
-		Assert.True(testCollection.DisableParallelization);
-		Assert.True(testCollection.EnableTestCaseParallelization);
+		Assert.Equal(ParallelizationOptions.Disabled, testCollection.ParallelizationOptions);
 	}
 	
 	[Collection("foo")]

@@ -32,7 +32,7 @@ public static class Xunit3ArgumentFactory
 			configFileName,
 			options.GetCulture(),
 			options.GetDiagnosticMessages(),
-			disableParallelization: null,
+			parallelizationOptions: null,
 			explicitOption: null,
 			failSkips: null,
 			failTestsWithWarnings: null,
@@ -78,7 +78,7 @@ public static class Xunit3ArgumentFactory
 			configFileName,
 			executionOptions.GetCulture() ?? discoveryOptions.GetCulture(),
 			executionOptions.GetDiagnosticMessages() ?? discoveryOptions.GetDiagnosticMessages(),
-			executionOptions.GetDisableParallelization(),
+			executionOptions.GetParallelizationOptions(),
 			executionOptions.GetExplicitOption(),
 			executionOptions.GetFailSkips(),
 			executionOptions.GetFailTestsWithWarnings(),
@@ -142,7 +142,7 @@ public static class Xunit3ArgumentFactory
 			configFileName,
 			options.GetCulture(),
 			options.GetDiagnosticMessages(),
-			options.GetDisableParallelization(),
+			options.GetParallelizationOptions(),
 			options.GetExplicitOption(),
 			options.GetFailSkips(),
 			options.GetFailTestsWithWarnings(),
@@ -173,7 +173,7 @@ public static class Xunit3ArgumentFactory
 		string? configFileName,
 		string? culture,
 		bool? diagnosicMessages,
-		bool? disableParallelization,
+		ParallelizationOptions? parallelizationOptions,
 		ExplicitOption? explicitOption,
 		bool? failSkips,
 		bool? failTestsWithWarnings,
@@ -265,10 +265,11 @@ public static class Xunit3ArgumentFactory
 		if (methodDisplayOptions.HasValue)
 			result.AddRange(["-methodDisplayOptions", methodDisplayOptions.Value.ToString().ReplaceOrdinal(" ", "")]);
 
-		result.AddRange(disableParallelization switch
+		result.AddRange(parallelizationOptions switch
 		{
-			true => ["-parallel", "none"],
-			false => ["-parallel", "collections"],
+			ParallelizationOptions.Disabled => ["-parallel", "none"],
+			ParallelizationOptions.Collections => ["-parallel", "collections"],
+			ParallelizationOptions.All => ["-parallel", "all"],
 			_ => [],
 		});
 

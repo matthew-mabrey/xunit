@@ -65,7 +65,7 @@ public class CoreTestCollectionRunner<TContext, TTestCollection, TTestClass, TTe
 	
 	/// <summary>
 	/// Runs the list of test classes. By default, groups the tests by class and runs them asynchronously
-	/// if <see cref="ICoreTestCollection.EnableTestCaseParallelization"/> is set, and synchronously otherwise.
+	/// if <see cref="ICoreTestCollection.ParallelizationOptions"/> is set, and synchronously otherwise.
 	/// </summary>
 	/// <remarks>
 	/// This method runs during <see cref="TestEngineStatus.Running"/> and any exceptions thrown will
@@ -83,7 +83,7 @@ public class CoreTestCollectionRunner<TContext, TTestCollection, TTestClass, TTe
 	{
 		Guard.ArgumentNotNull(ctxt);
 
-		if (!ctxt.EnableTestCaseParallelization)
+		if (!ctxt.ParallelizationOptions.HasFlag(ParallelizationOptions.Classes))
 		{
 			return await base.RunTestClasses(ctxt, exception);
 		}

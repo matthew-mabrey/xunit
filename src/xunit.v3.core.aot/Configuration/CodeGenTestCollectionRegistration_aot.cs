@@ -1,3 +1,5 @@
+using Xunit.Sdk;
+
 #if XUNIT_GENERATOR
 namespace Xunit.Generators;
 #else
@@ -28,28 +30,18 @@ public sealed class CodeGenTestCollectionRegistration
 #endif
 
 	/// <summary>
-	/// A flag indicating whether this collection wants to run without being parallelized against
-	/// other test collections.
+	/// Options indicating the parallelization options to use for this test collection.
 	/// </summary>
 #if XUNIT_GENERATOR
-	public required bool DisableParallelization { get; set; }
+	public required int? ParallelizationOptions { get; set; }
 #else
-	public bool DisableParallelization { get; init; }
-#endif
-
-	/// <summary>
-	/// A flag indicating whether this collection's test cases can run in parallel.
-	/// </summary>
-#if XUNIT_GENERATOR
-	public required bool EnableTestCaseParallelization { get; set; }
-#else
-	public bool EnableTestCaseParallelization { get; init; }
+	public ParallelizationOptions ParallelizationOptions { get; init; }
 #endif
 
 #if !XUNIT_GENERATOR
 
 	/// <summary>
-	/// Gets the empty test collection registration.
+	/// Gets the empty test collection+ registration.
 	/// </summary>
 	public static CodeGenTestCollectionRegistration Empty { get; } = new();
 
@@ -104,8 +96,8 @@ public sealed class CodeGenTestCollectionRegistration
 			initValues.Add($"ClassFixtureFactories = {CodeGenRegistration.ToFixtureFactories(ClassFixtures)}");
 		if (CollectionFixtures.Count != 0)
 			initValues.Add($"CollectionFixtureFactories = {CodeGenRegistration.ToFixtureFactories(CollectionFixtures)}");
-		if (DisableParallelization)
-			initValues.Add("DisableParallelization = true");
+		if (ParallelizationOptions is not null)
+			initValues.Add($"ParallelizationOptions = (Xunit.Sdk.ParallelizationOptions){ParallelizationOptions}");
 		if (TestCaseOrdererType is not null)
 			initValues.Add($"TestCaseOrdererFactory = () => new {TestCaseOrdererType}()");
 		if (TestClassOrdererType is not null)

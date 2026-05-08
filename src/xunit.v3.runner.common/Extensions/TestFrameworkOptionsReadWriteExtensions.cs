@@ -397,38 +397,21 @@ public static class TestFrameworkOptionsReadWriteExtensions
 		GetDiagnosticMessages(executionOptions) ?? false;
 
 	/// <summary>
-	/// Gets a flag to disable parallelization.
-	/// </summary>
-	public static bool? GetDisableParallelization(this ITestFrameworkExecutionOptions executionOptions)
-	{
-		Guard.ArgumentNotNull(executionOptions);
-
-		return executionOptions.GetValue<bool?>(TestOptionsNames.Execution.DisableParallelization);
-	}
-
-	/// <summary>
-	/// Gets a flag to disable parallelization. If the flag is not present, returns the
-	/// default value (<see langword="false"/>).
-	/// </summary>
-	public static bool GetDisableParallelizationOrDefault(this ITestFrameworkExecutionOptions executionOptions) =>
-		GetDisableParallelization(executionOptions) ?? false;
-
-	/// <summary>
 	/// Gets a flag indicating whether to enable test case parallelization for all collections.
 	/// </summary>
-	public static bool? GetEnableTestCaseParallelization(this ITestFrameworkExecutionOptions executionOptions)
+	public static ParallelizationOptions? GetParallelizationOptions(this ITestFrameworkExecutionOptions executionOptions)
 	{
 		Guard.ArgumentNotNull(executionOptions);
 
-		return executionOptions.GetValue<bool?>(TestOptionsNames.Execution.EnableTestCaseParallelization);
+		return executionOptions.GetValue<ParallelizationOptions?>(TestOptionsNames.Execution.ParallelizationOptions);
 	}
 
 	/// <summary>
 	/// Gets a flag indicating whether to enable test case parallelization for all collections. If the flag is not
 	/// present, returns the default value (<see langword="false"/>).
 	/// </summary>
-	public static bool GetEnableTestCaseParallelizationOrDefault(this ITestFrameworkExecutionOptions executionOptions) =>
-		GetEnableTestCaseParallelization(executionOptions) ?? false;
+	public static ParallelizationOptions GetParallelizationOptionsOrDefault(this ITestFrameworkExecutionOptions executionOptions) =>
+		GetParallelizationOptions(executionOptions) ?? ParallelizationOptions.Default;
 
 	/// <summary>
 	/// Gets a flag that indicates how explicit tests should be handled.
@@ -692,27 +675,15 @@ public static class TestFrameworkOptionsReadWriteExtensions
 	}
 
 	/// <summary>
-	/// Sets a flag to disable parallelization.
+	/// Sets the parallelization options to use for all test collections by default.
 	/// </summary>
-	public static void SetDisableParallelization(
+	public static void SetParallelizationOptions(
 		this ITestFrameworkExecutionOptions executionOptions,
-		bool? value)
+		ParallelizationOptions? value)
 	{
 		Guard.ArgumentNotNull(executionOptions);
 
-		executionOptions.SetValue(TestOptionsNames.Execution.DisableParallelization, value);
-	}
-
-	/// <summary>
-	/// Sets a flag to enable test case parallelization within all test collections by default.
-	/// </summary>
-	public static void SetEnableTestCaseParallelization(
-		this ITestFrameworkExecutionOptions executionOptions,
-		bool? value)
-	{
-		Guard.ArgumentNotNull(executionOptions);
-
-		executionOptions.SetValue(TestOptionsNames.Execution.EnableTestCaseParallelization, value);
+		executionOptions.SetValue(TestOptionsNames.Execution.ParallelizationOptions, value);
 	}
 
 	/// <summary>

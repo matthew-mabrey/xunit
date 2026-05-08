@@ -14,8 +14,7 @@ public class CollectionPerAssemblyTestCollectionFactoryTests
 		Assert.Empty(testCollection.BeforeAfterTestAttributes);
 		Assert.Empty(testCollection.ClassFixtureFactories);
 		Assert.Empty(testCollection.CollectionFixtureFactories);
-		Assert.False(testCollection.DisableParallelization);
-		Assert.False(testCollection.EnableTestCaseParallelization);
+		Assert.Null(testCollection.ParallelizationOptions);
 		Assert.Same(testAssembly, testCollection.TestAssembly);
 		Assert.Null(testCollection.TestCaseOrderer);
 		Assert.Null(testCollection.TestClassOrderer);

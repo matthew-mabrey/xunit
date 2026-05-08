@@ -19,22 +19,14 @@ public interface ICoreTestAssembly : ITestAssembly
 	/// instead for better testability.
 	/// </remarks>
 	Assembly Assembly { get; }
-
-	/// <summary>
-	/// Gets a flag which indicates whether the user has requested that parallelization be disabled.
-	/// </summary>
-	/// <remarks>
-	/// If this returns <see langword="null"/>, the default value will be used (typically <see langword="false"/>).
-	/// </remarks>
-	bool? DisableParallelization { get; }
-
+	
 	/// <summary>
 	/// Gets a flag which indicates whether test cases in this collection can run in parallel with each other.
 	/// </summary>
 	/// <remarks>
 	/// If this returns <see langword="null"/>, the default value will be used (typically <see langword="false"/>).
 	/// </remarks>
-	bool? EnableTestCaseParallelization { get; }
+	ParallelizationOptions? ParallelizationOptions { get; }
 	
 	/// <summary>
 	/// Gets the maximum number of threads to use when running tests in parallel. If this returns a
@@ -52,7 +44,6 @@ public interface ICoreTestAssembly : ITestAssembly
 	/// <remarks>
 	/// If this returns <see langword="null"/>, the default value will be used (typically <see cref="ParallelAlgorithm.Conservative"/>).<br />
 	/// <br />
-	/// This will only be relevant if <see cref="DisableParallelization"/> returns <see langword="false"/>.
 	/// </remarks>
 	ParallelAlgorithm? ParallelAlgorithm { get; }
 	

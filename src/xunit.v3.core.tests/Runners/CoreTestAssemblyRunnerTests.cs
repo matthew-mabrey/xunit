@@ -23,7 +23,7 @@ public class CoreTestAssemblyRunnerTests
 			var testCase2 = testCaseForCollection(testCollection2, "test-case-2");
 			var testCollection3 = Mocks.CoreTestCollection(testAssembly: testAssembly, testCollectionDisplayName: "test-collection-3", uniqueID: "3");
 			var testCase3 = testCaseForCollection(testCollection3, "test-case-3");
-			var options = TestData.TestFrameworkExecutionOptions(disableParallelization: true);
+			var options = TestData.TestFrameworkExecutionOptions(parallelizationOptions: ParallelizationOptions.Disabled);
 			var runner = new TestableCoreTestAssemblyRunner([testCase3, testCase1, testCase2], options);
 
 			await runner.RunAsync();
@@ -166,7 +166,7 @@ public class CoreTestAssemblyRunnerTests
 			var testCase1 = Mocks.CoreTestCase(testCaseDisplayName: "TestCase1", testMethod: Mocks.CoreTestMethod(testClass: Mocks.CoreTestClass(testCollection: testCollection1)));
 			var testCollection2 = Mocks.CoreTestCollection(uniqueID: "2");
 			var testCase2 = Mocks.CoreTestCase(testCaseDisplayName: "TestCase2", testMethod: Mocks.CoreTestMethod(testClass: Mocks.CoreTestClass(testCollection: testCollection2)));
-			var options = TestData.TestFrameworkExecutionOptions(disableParallelization: true);
+			var options = TestData.TestFrameworkExecutionOptions(parallelizationOptions: ParallelizationOptions.Disabled);
 			var runner = new TestableCoreTestAssemblyRunner([testCase1, testCase2], options);
 
 			await runner.RunAsync();

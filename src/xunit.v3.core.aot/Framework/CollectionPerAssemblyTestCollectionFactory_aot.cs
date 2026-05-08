@@ -1,3 +1,5 @@
+using Xunit.Sdk;
+
 namespace Xunit.v3;
 
 /// <summary>
@@ -20,8 +22,7 @@ public class CollectionPerAssemblyTestCollectionFactory : TestCollectionFactoryB
 				beforeAfterTestAttributes: TestAssembly.BeforeAfterTestAttributes,
 				classFixtureFactories: CodeGenHelper.EmptyFixtureFactories,
 				collectionFixtureFactories: CodeGenHelper.EmptyFixtureFactories,
-				disableParallelization: false,
-				enableTestCaseParallelization: false,
+				parallelizationOptions: ParallelizationOptions.Default,
 				TestAssembly,
 				testCollectionClass: null,
 				$"Test collection for {Guard.ArgumentNotNull(testAssembly).AssemblyName}",

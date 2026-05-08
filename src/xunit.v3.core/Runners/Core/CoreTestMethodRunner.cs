@@ -57,7 +57,7 @@ public class CoreTestMethodRunner<TContext, TTestMethod, TTestCase> : TestMethod
 
 	/// <summary>
 	/// Runs the list of test cases. By default, it runs the cases in order, synchronously, or in parallel
-	/// if <see cref="ICoreTestCollection.EnableTestCaseParallelization"/> is set.
+	/// if <see cref="ICoreTestCollection.ParallelizationOptions"/> is set.
 	/// </summary>
 	/// <remarks>
 	/// This method runs during <see cref="TestEngineStatus.Running"/> and any exceptions thrown will
@@ -75,7 +75,7 @@ public class CoreTestMethodRunner<TContext, TTestMethod, TTestCase> : TestMethod
 	{
 		Guard.ArgumentNotNull(ctxt);
 
-		if (!ctxt.EnableTestCaseParallelization)
+		if (!ctxt.ParallelizationOptions.HasFlag(ParallelizationOptions.TestCases))
 		{
 			return await base.RunTestCases(ctxt, exception);
 		}

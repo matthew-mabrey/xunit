@@ -1,5 +1,6 @@
 using Xunit.Runner.Common;
 using Xunit.Sdk;
+using Xunit.v3;
 
 // This file manufactures instances of the test messages
 partial class TestData
@@ -275,7 +276,7 @@ partial class TestData
 		decimal executionTime = 123.4567m,
 		bool internalDiagnosticMessages = false,
 		int maxParallelThreads = 2600,
-		bool parallelizeTestCollections = false,
+		ParallelizationOptions parallelizeTestCollections = ParallelizationOptions.Disabled,
 		int testsErrored = 95,
 		int testsFailed = DefaultCountFailed,
 		int testsNotRun = DefaultCountNotRun,
@@ -288,7 +289,7 @@ partial class TestData
 		// See the ForExecution method to see which TestAssemblyConfiguration options are used for discovery
 		var executionOptions = TestFrameworkExecutionOptions(
 			diagnosticMessages: diagnosticMessages,
-			disableParallelization: !parallelizeTestCollections,
+			parallelizationOptions: parallelizeTestCollections,
 			internalDiagnosticMessages: internalDiagnosticMessages,
 			maxParallelThreads: maxParallelThreads
 		);
@@ -320,8 +321,7 @@ partial class TestData
 		bool internalDiagnosticMessages = false,
 		int maxParallelThreads = 2600,
 		ParallelAlgorithm? parallelAlgorithm = null,
-		bool? parallelizeTestCollections = null,
-		bool? parallelizeTestCases = null,
+		ParallelizationOptions? parallelizationOptions = null,
 		bool? stopOnFail = null,
 		int? seed = null,
 		string? culture = null,
@@ -334,8 +334,7 @@ partial class TestData
 		var executionOptions = TestFrameworkExecutionOptions(
 			culture: culture,
 			diagnosticMessages: diagnosticMessages,
-			disableParallelization: !parallelizeTestCollections,
-			enableTestCaseParallelization: parallelizeTestCases,
+			parallelizationOptions: parallelizationOptions,
 			explicitOption: explicitOption,
 			internalDiagnosticMessages: internalDiagnosticMessages,
 			maxParallelThreads: maxParallelThreads,

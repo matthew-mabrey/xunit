@@ -35,15 +35,10 @@ public class CollectionDefinitionAttributeGenerator() :
 		if (attribute.ConstructorArguments.Length == 1 && attribute.ConstructorArguments[0].Value is string stringValue)
 			name = stringValue;
 
-		var disableParallelization = false;
-		var enableTestCaseParallelization = false;
-		if (attribute.NamedArguments.FirstOrDefault(kvp => kvp.Key == Names.Xunit.CollectionDefinitionAttribute.DisableParallelization) is { } disableParallelizationArg
-				&& disableParallelizationArg.Value.Value is true)
-			disableParallelization = true;
-
-		if (attribute.NamedArguments.FirstOrDefault(kvp => kvp.Key == Names.Xunit.CollectionDefinitionAttribute.EnableTestCaseParallelization) is { } enableTestCaseParallelizationArg
-		    && enableTestCaseParallelizationArg.Value.Value is true)
-			enableTestCaseParallelization = true;
+		var parallelizationOptions = 0;
+		if (attribute.NamedArguments.FirstOrDefault(kvp => kvp.Key == Names.Xunit.CollectionDefinitionAttribute.ParallelizationOptions) is { } parallelizationOptionsArg
+		    && parallelizationOptionsArg.Value.Value is int intValue)
+			parallelizationOptions = intValue;
 		
 		var testCaseOrdererType = default(string);
 		var testClassOrdererType = default(string);
@@ -118,8 +113,7 @@ public class CollectionDefinitionAttributeGenerator() :
 		{
 			ClassFixtures = classFixtures,
 			CollectionFixtures = collectionFixtures,
-			DisableParallelization = disableParallelization,
-			EnableTestCaseParallelization = enableTestCaseParallelization,
+			ParallelizationOptions = parallelizationOptions,
 			TestCaseOrdererType = testCaseOrdererType,
 			TestClassOrdererType = testClassOrdererType,
 			TestMethodOrdererType = testMethodOrdererType,

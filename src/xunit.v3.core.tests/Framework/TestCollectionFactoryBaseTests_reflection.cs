@@ -1,4 +1,5 @@
 using Xunit;
+using Xunit.Sdk;
 using Xunit.v3;
 
 public class TestCollectionFactoryBaseTests
@@ -39,7 +40,7 @@ public class TestCollectionFactoryBaseTests
 		Assert.Empty(testCollection.ClassFixtureTypes);
 		Assert.Equal(collectionDefinition, testCollection.CollectionDefinition);
 		Assert.Empty(testCollection.CollectionFixtureTypes);
-		Assert.False(testCollection.DisableParallelization);
+		Assert.Equal(ParallelizationOptions.Default, testCollection.ParallelizationOptions);
 		Assert.Same(testAssembly, testCollection.TestAssembly);
 		Assert.Null(testCollection.TestCaseOrderer);
 		Assert.Equal(testCollectionClassName, testCollection.TestCollectionClassName);
@@ -102,14 +103,14 @@ public class TestCollectionFactoryBaseTests
 		// Decorated definitions are read and cached by the test assembly
 		var definitions = new Dictionary<string, (Type, CollectionDefinitionAttribute)>
 		{
-			["foo"] = (typeof(TestCollectionWithoutParallelization), new CollectionDefinitionAttribute { DisableParallelization = true })
+			["foo"] = (typeof(TestCollectionWithoutParallelization), new CollectionDefinitionAttribute { ParallelizationOptions = ParallelizationOptions.Disabled })
 		};
 		var testAssembly = Mocks.XunitTestAssembly(collectionDefinitions: definitions);
 		var factory = new TestableTestCollectionFactory(testAssembly);
 
 		var testCollection = factory.Get(typeof(TestClassForParallelization));
 
-		Assert.True(testCollection.DisableParallelization);
+		Assert.Equal(ParallelizationOptions.Disabled, testCollection.ParallelizationOptions);
 	}
 
 	class TestCollectionWithoutParallelization { }

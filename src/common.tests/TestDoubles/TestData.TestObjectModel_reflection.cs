@@ -221,27 +221,24 @@ partial class TestData
 	public static XunitTestCollection XunitTestCollection(
 		IXunitTestAssembly assembly,
 		Type? collectionDefinition = null,
-		bool? disableParallelization = null,
-		bool? enableTestCaseParallelization = null,
+		ParallelizationOptions? parallelizationOptions = null,
 		string? displayName = null,
 		string uniqueID = DefaultTestCollectionUniqueID) =>
-			new(assembly, collectionDefinition, disableParallelization ?? false, enableTestCaseParallelization ?? false, displayName ?? $"[Unit Test] Collection for '{assembly.AssemblyName}'", uniqueID);
+			new(assembly, collectionDefinition, parallelizationOptions ?? ParallelizationOptions.Default, displayName ?? $"[Unit Test] Collection for '{assembly.AssemblyName}'", uniqueID);
 
 	public static XunitTestCollection XunitTestCollection<TClassUnderTest>(
 		Type? collectionDefinition = null,
-		bool? disableParallelization = null,
-		bool? enableTestCaseParallelization = null,
+		ParallelizationOptions? parallelizationOptions = null,
 		string? displayName = null,
 		string uniqueID = DefaultTestCollectionUniqueID)
 	{
 		var testAssembly = XunitTestAssembly<TClassUnderTest>();
 		var standardCollection = new CollectionPerClassTestCollectionFactory(testAssembly).Get(typeof(TClassUnderTest));
 		collectionDefinition ??= standardCollection.CollectionDefinition;
-		disableParallelization ??= standardCollection.DisableParallelization;
-		enableTestCaseParallelization ??= standardCollection.EnableTestCaseParallelization;
+		parallelizationOptions ??= standardCollection.ParallelizationOptions;
 		displayName ??= standardCollection.TestCollectionDisplayName;
 
-		return XunitTestCollection(testAssembly, collectionDefinition, disableParallelization, enableTestCaseParallelization, displayName, uniqueID);
+		return XunitTestCollection(testAssembly, collectionDefinition, parallelizationOptions, displayName, uniqueID);
 	}
 
 	public static XunitTestMethod XunitTestMethod(

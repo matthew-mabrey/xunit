@@ -8,8 +8,7 @@ namespace Xunit.v3;
 /// <param name="beforeAfterTestAttributes">The <see cref="BeforeAfterTestAttribute"/>s attached to this test collection</param>
 /// <param name="classFixtureFactories">The fixture factories for class-level test fixtures (on the collection)</param>
 /// <param name="collectionFixtureFactories">The fixture factories for collection-level test fixtures (on the collection)</param>
-/// <param name="disableParallelization">Determines whether tests in this collection run in parallel with any other collections</param>
-/// <param name="enableTestCaseParallelization">Determines whether tests in this collection run in parallel.</param>
+/// <param name="parallelizationOptions">Determines whether tests in this collection run in parallel.</param>
 /// <param name="testAssembly">The test assembly this collection belongs to</param>
 /// <param name="testCollectionClass">The optional type that contains the test collection definition</param>
 /// <param name="testCollectionDisplayName">The display name of the test collection</param>
@@ -22,8 +21,7 @@ public sealed class CodeGenTestCollection(
 	IReadOnlyCollection<BeforeAfterTestAttribute> beforeAfterTestAttributes,
 	IReadOnlyDictionary<Type, Func<FixtureMappingManager?, ValueTask<object>>> classFixtureFactories,
 	IReadOnlyDictionary<Type, Func<FixtureMappingManager?, ValueTask<object>>> collectionFixtureFactories,
-	bool disableParallelization,
-	bool enableTestCaseParallelization,
+	ParallelizationOptions parallelizationOptions,
 	ICodeGenTestAssembly testAssembly,
 	Type? testCollectionClass,
 	string testCollectionDisplayName,
@@ -48,11 +46,7 @@ public sealed class CodeGenTestCollection(
 		Guard.ArgumentNotNull(collectionFixtureFactories);
 
 	/// <inheritdoc/>
-	public bool DisableParallelization =>
-		disableParallelization;
-
-	/// <inheritdoc/>
-	public bool EnableTestCaseParallelization { get; set; } = enableTestCaseParallelization;
+	public ParallelizationOptions ParallelizationOptions { get; set; } = parallelizationOptions;
 	
 	/// <inheritdoc/>
 	public ICodeGenTestAssembly TestAssembly { get; } =

@@ -1,3 +1,5 @@
+using Xunit.Sdk;
+
 namespace Xunit;
 
 /// <summary>
@@ -28,14 +30,19 @@ public sealed class CollectionDefinitionAttribute : Attribute
 		Name = Guard.ArgumentNotNull(name);
 
 	/// <summary>
-	/// Determines whether tests in this collection runs in parallel with any other collections.
+	/// The parallelization options to use for this test collection.
 	/// </summary>
-	public bool DisableParallelization { get; set; }
-
+	public bool DisableParallelization
+	{
+		get => ParallelizationOptions == ParallelizationOptions.Disabled;
+		set => ParallelizationOptions =
+			value ? ParallelizationOptions.Disabled : ParallelizationOptions;
+	}
+	
 	/// <summary>
-	/// Determines whether test cases in this collection can run in parallel with each other.
+	/// The parallelization options to use for this test collection.
 	/// </summary>
-	public bool EnableTestCaseParallelization { get; set; }
+	public ParallelizationOptions ParallelizationOptions { get; set; }
 
 	/// <summary>
 	/// Gets the collection defintion name, if one was provided.

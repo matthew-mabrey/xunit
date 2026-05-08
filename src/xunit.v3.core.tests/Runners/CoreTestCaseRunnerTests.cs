@@ -71,13 +71,6 @@ public class CoreTestCaseRunnerTests
 
 	public class Parallelization
 	{
-		// Test Cases:
-		// 1. Test Case Collection (DisableParallelization = false, EnableTestCaseParallelization = true) has two test cases run in parallel within collection
-		// 2. Test Case Collection (DisableParallelization = true, EnableTestCaseParallelization = true) has two cases run in parallel, and sync with another outside collection
-		// 3. Test Case Collection (DisableParallelization = false, EnableTestCaseParallelization = false) test collections run parallel, and cases run synchronously 
-		// 4. Test Case Collection (DisableParallelization = true, EnableTestCaseParallelization = false) test collections run synchronously, and cases run synchronously 
-		// 5. TestAssembly setting overrides test collection setting
-		
 		[Fact]
 		public async ValueTask ParallelTests()
 		{
@@ -89,7 +82,7 @@ public class CoreTestCaseRunnerTests
 
 			var timeoutTask = Task.Delay(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
 			var completionTask = Task.WhenAny(timeoutTask, Task.WhenAll(testTcs1.Task, testTcs2.Task));
-			var runner = new TestableCoreTestCaseRunner([test1, test2], runTest, enableTestCaseParallelization: true);
+			var runner = new TestableCoreTestCaseRunner([test1, test2], runTest, parallelizationOptions: ParallelizationOptions.All);
 
 			await runner.RunAsync();
 			
@@ -150,7 +143,7 @@ public class CoreTestCaseRunnerTests
 	class TestableCoreTestCaseRunner(
 		ICoreTest[] tests,
 		Func<ICoreTest, ValueTask<RunSummary>>? runTestLamda = null,
-		bool enableTestCaseParallelization = false) :
+		ParallelizationOptions parallelizationOptions = ParallelizationOptions.Default) :
 		CoreTestCaseRunner<TestableCoreTestCaseRunner.TestableContext, ICoreTestCase, ICoreTest>
 	{
 		public readonly ExceptionAggregator Aggregator = new();
@@ -168,7 +161,7 @@ public class CoreTestCaseRunnerTests
 				Aggregator,
 				testCase.TestCaseDisplayName,
 				testCase.SkipReason,
-				enableTestCaseParallelization,
+				parallelizationOptions,
 				runTestLamda ?? (_ => new ValueTask<RunSummary>(new RunSummary { Total = 1 })),
 				CancellationTokenSource
 			);
@@ -185,11 +178,11 @@ public class CoreTestCaseRunnerTests
 			ExceptionAggregator aggregator,
 			string displayName,
 			string? skipReason,
-			bool enableTestCaseParallelization,
+			ParallelizationOptions parallelizationOptions,
 			Func<ICoreTest, ValueTask<RunSummary>> runTestLambda,
 			CancellationTokenSource cancellationTokenSource) :
 			CoreTestCaseRunnerContext<ICoreTestCase, ICoreTest>(testCase, tests, explicitOption, messageBus, aggregator,
-				displayName, skipReason, enableTestCaseParallelization,
+				displayName, skipReason, parallelizationOptions,
 				parallelizationSemaphore: null, cancellationTokenSource)
 		{
 			public override ValueTask<RunSummary> RunTest(ICoreTest test) => runTestLambda(test);

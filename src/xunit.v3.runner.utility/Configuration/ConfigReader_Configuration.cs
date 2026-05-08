@@ -71,9 +71,7 @@ public static class ConfigReader_Configuration
 				configuration.MethodDisplay = GetEnum<TestMethodDisplay>(settings, Configuration.MethodDisplay) ?? configuration.MethodDisplay;
 				configuration.MethodDisplayOptions = GetEnum<TestMethodDisplayOptions>(settings, Configuration.MethodDisplayOptions) ?? configuration.MethodDisplayOptions;
 				configuration.ParallelAlgorithm = GetEnum<ParallelAlgorithm>(settings, Configuration.ParallelAlgorithm) ?? configuration.ParallelAlgorithm;
-				configuration.ParallelizeAssembly = GetBoolean(settings, Configuration.ParallelizeAssembly) ?? configuration.ParallelizeAssembly;
-				configuration.ParallelizeTestCollections = GetBoolean(settings, Configuration.ParallelizeTestCollections) ?? configuration.ParallelizeTestCollections;
-				configuration.ParallelizeTestCases = GetBoolean(settings, Configuration.ParallelizeTestCases) ?? configuration.ParallelizeTestCases;
+				configuration.ParallelizationOptions = GetEnum<ParallelizationOptions>(settings, Configuration.ParallelizationOptions) ?? configuration.ParallelizationOptions;
 				configuration.PreEnumerateTheories = GetBoolean(settings, Configuration.PreEnumerateTheories) ?? configuration.PreEnumerateTheories;
 				configuration.ShadowCopy = GetBoolean(settings, Configuration.ShadowCopy) ?? configuration.ShadowCopy;
 				configuration.StopOnFail = GetBoolean(settings, Configuration.StopOnFail) ?? configuration.StopOnFail;
@@ -161,9 +159,7 @@ public static class ConfigReader_Configuration
 		public const string MethodDisplay = "xunit.methodDisplay";
 		public const string MethodDisplayOptions = "xunit.methodDisplayOptions";
 		public const string ParallelAlgorithm = "xunit.parallelAlgorithm";
-		public const string ParallelizeAssembly = "xunit.parallelizeAssembly";
-		public const string ParallelizeTestCollections = "xunit.parallelizeTestCollections";
-		public const string ParallelizeTestCases = "xunit.parallelizeTestCases";
+		public const string ParallelizationOptions = "xunit.parallelizationOptions";
 		public const string PreEnumerateTheories = "xunit.preEnumerateTheories";
 		public const string ShadowCopy = "xunit.shadowCopy";
 		public const string StopOnFail = "xunit.stopOnFail";

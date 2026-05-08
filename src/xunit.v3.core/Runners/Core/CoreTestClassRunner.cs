@@ -91,7 +91,7 @@ public class CoreTestClassRunner<TContext, TTestClass, TTestMethod, TTestCase> :
 	
 	/// <summary>
 	/// Runs the list of test methods. By default, orders the tests, groups them by method,
-	/// and runs them asynchronously if <see cref="ICoreTestCollection.EnableTestCaseParallelization"/> is set, and
+	/// and runs them asynchronously if <see cref="ICoreTestCollection.ParallelizationOptions"/> is set, and
 	/// synchronously otherwise.
 	/// </summary>
 	/// <remarks>
@@ -108,7 +108,7 @@ public class CoreTestClassRunner<TContext, TTestClass, TTestMethod, TTestCase> :
 	{
 		Guard.ArgumentNotNull(ctxt);
 
-		if (!ctxt.EnableTestCaseParallelization)
+		if (!ctxt.ParallelizationOptions.HasFlag(ParallelizationOptions.Methods))
 		{
 			return await base.RunTestMethods(ctxt, exception);
 		}

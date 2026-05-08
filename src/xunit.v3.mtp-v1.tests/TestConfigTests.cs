@@ -27,7 +27,7 @@ public class TestConfigTests
 		Assert.Null(projectAssembly.Configuration.MethodDisplay);
 		Assert.Null(projectAssembly.Configuration.MethodDisplayOptions);
 		Assert.Null(projectAssembly.Configuration.ParallelAlgorithm);
-		Assert.Null(projectAssembly.Configuration.ParallelizeTestCollections);
+		Assert.Null(projectAssembly.Configuration.ParallelizationOptions);
 		Assert.Null(projectAssembly.Configuration.PrintMaxEnumerableLength);
 		Assert.Null(projectAssembly.Configuration.PrintMaxObjectDepth);
 		Assert.Null(projectAssembly.Configuration.PrintMaxObjectMemberCount);
@@ -143,6 +143,28 @@ public class TestConfigTests
 		Assert.Equal(expected, projectAssembly.Configuration.ParallelAlgorithm);
 	}
 
+	[Theory]
+	[InlineData("unknownValue", null)]
+	[InlineData("disabled", Xunit.Sdk.ParallelizationOptions.Disabled)]
+	[InlineData("assemblies", Xunit.Sdk.ParallelizationOptions.Assemblies)]
+	[InlineData("collections", Xunit.Sdk.ParallelizationOptions.Collections)]
+	[InlineData("classes", Xunit.Sdk.ParallelizationOptions.Classes)]
+	[InlineData("methods", Xunit.Sdk.ParallelizationOptions.Methods)]
+	[InlineData("testcases", Xunit.Sdk.ParallelizationOptions.TestCases)]
+	[InlineData("tests", Xunit.Sdk.ParallelizationOptions.Tests)]
+	[InlineData("all", Xunit.Sdk.ParallelizationOptions.All)]
+	public void ParallelizationOptions(
+		string value,
+		ParallelizationOptions? expected)
+	{
+		var config = new StubConfiguration((TestConfig.Keys.ParallelizationOptions, value));
+		var projectAssembly = TestData.XunitProjectAssembly<TestConfigTests>();
+
+		TestConfig.Parse(config, projectAssembly);
+
+		Assert.Equal(expected, projectAssembly.Configuration.ParallelizationOptions);
+	}
+
 	public class Booleans
 	{
 		static readonly (string, Expression<Func<XunitProjectAssembly, bool?>>)[] booleanOptions =
@@ -151,7 +173,6 @@ public class TestConfigTests
 			(TestConfig.Keys.FailSkips, assembly => assembly.Configuration.FailSkips),
 			(TestConfig.Keys.FailWarns, assembly => assembly.Configuration.FailTestsWithWarnings),
 			(TestConfig.Keys.InternalDiagnosticMessages, assembly => assembly.Configuration.InternalDiagnosticMessages),
-			(TestConfig.Keys.ParallelizeTestCollections, assembly => assembly.Configuration.ParallelizeTestCollections),
 			(TestConfig.Keys.PreEnumerateTheories, assembly => assembly.Configuration.PreEnumerateTheories),
 			(TestConfig.Keys.ShowLiveOutput, assembly => assembly.Configuration.ShowLiveOutput),
 			(TestConfig.Keys.StopOnFail, assembly => assembly.Configuration.StopOnFail),

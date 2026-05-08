@@ -1,4 +1,5 @@
 using Xunit.Sdk;
+using Xunit.v3.Utility;
 
 namespace Xunit.v3;
 
@@ -90,18 +91,10 @@ public abstract class CoreTestAssemblyRunner<TContext, TTestAssembly, TTestColle
 	{
 		Guard.ArgumentNotNull(ctxt);
 
-		if (ctxt.DisableParallelization || exception is not null)
+		if (ctxt.ParallelizationOptions?.HasFlag(ParallelizationOptions.Collections) == false || exception is not null)
 			return await base.RunTestCollections(ctxt, exception);
 
-		Func<Func<ValueTask<RunSummary>>, ValueTask<RunSummary>> taskRunner;
-		if (SynchronizationContext.Current is not null)
-		{
-			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-			taskRunner = code => new(Task.Factory.StartNew(() => code().AsTask(), ctxt.CancellationTokenSource.Token, TaskCreationOptions.DenyChildAttach | TaskCreationOptions.HideScheduler, scheduler).Unwrap());
-		}
-		else
-			taskRunner = code => new(Task.Run(() => code().AsTask(), ctxt.CancellationTokenSource.Token));
-
+		var taskRunner = TestPipelineTaskRunner.Create(ctxt.CancellationTokenSource.Token);
 		List<ValueTask<RunSummary>>? parallel = null;
 		List<Func<ValueTask<RunSummary>>>? nonParallel = null;
 		var summaries = new List<RunSummary>();
@@ -109,10 +102,10 @@ public abstract class CoreTestAssemblyRunner<TContext, TTestAssembly, TTestColle
 		foreach (var (collection, testCases) in OrderTestCollections(ctxt))
 		{
 			ValueTask<RunSummary> task() => RunTestCollection(ctxt, collection, testCases);
-			if (collection.DisableParallelization)
-				(nonParallel ??= []).Add(task);
-			else
+			if (collection.ParallelizationOptions.HasFlag(ParallelizationOptions.Collections))
 				(parallel ??= []).Add(taskRunner(task));
+			else
+				(nonParallel ??= []).Add(task);
 		}
 
 		if (parallel?.Count > 0)

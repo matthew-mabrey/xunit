@@ -61,7 +61,7 @@ partial class Mocks
 		string? configFilePath = null,
 		IReadOnlyDictionary<string, CodeGenTestCollectionRegistration>? collectionDefinitions = null,
 		bool? disableParallelization = null,
-		bool? enableTestCaseParallelization = null,
+		ParallelizationOptions? parallelizationOptions = null,
 		int? maxParallelThreads = null,
 		Guid? moduleVersionID = null,
 		ParallelAlgorithm? parallelAlgorithm = null,
@@ -84,7 +84,7 @@ partial class Mocks
 				CollectionDefinitions = collectionDefinitions ?? TestData.EmptyCollectionDefinitions,
 				ConfigFilePath = configFilePath,
 				DisableParallelization = disableParallelization,
-				EnableTestCaseParallelization = enableTestCaseParallelization,
+				ParallelizationOptions = parallelizationOptions,
 				MaxParallelThreads = maxParallelThreads,
 				ModuleVersionID = moduleVersionID ?? TestData.DefaultModuleVersionID,
 				ParallelAlgorithm = parallelAlgorithm,
@@ -113,7 +113,7 @@ partial class Mocks
 		public required string? ConfigFilePath { get; set; }
 		public required IReadOnlyDictionary<string, CodeGenTestCollectionRegistration> CollectionDefinitions { get; set; }
 		public required bool? DisableParallelization { get; set; }
-		public required bool? EnableTestCaseParallelization { get; set; }
+		public required ParallelizationOptions? ParallelizationOptions { get; set; }
 		public required int? MaxParallelThreads { get; set; }
 		public required Guid ModuleVersionID { get; set; }
 		public required ParallelAlgorithm? ParallelAlgorithm { get; set; }
@@ -291,7 +291,7 @@ partial class Mocks
 		IReadOnlyDictionary<Type, Func<FixtureMappingManager?, ValueTask<object>>>? classFixtureFactories = null,
 		IReadOnlyDictionary<Type, Func<FixtureMappingManager?, ValueTask<object>>>? collectionFixtureFactories = null,
 		bool disableParallelization = false,
-		bool enableTestCaseParallelization = false,
+		ParallelizationOptions parallelizationOptions = ParallelizationOptions.Default,
 		ICodeGenTestAssembly? testAssembly = null,
 		ITestCaseOrderer? testCaseOrderer = null,
 		ITestClassOrderer? testClassOrderer = null,
@@ -306,7 +306,7 @@ partial class Mocks
 				ClassFixtureFactories = classFixtureFactories ?? TestData.EmptyFixtureFactories,
 				CollectionFixtureFactories = collectionFixtureFactories ?? TestData.EmptyFixtureFactories,
 				DisableParallelization = disableParallelization,
-				EnableTestCaseParallelization = enableTestCaseParallelization,
+				ParallelizationOptions = parallelizationOptions,
 				TestAssembly = testAssembly ?? CodeGenTestAssembly(),
 				TestCaseOrderer = testCaseOrderer,
 				TestClassOrderer = testClassOrderer,
@@ -323,7 +323,7 @@ partial class Mocks
 		public required IReadOnlyDictionary<Type, Func<FixtureMappingManager?, ValueTask<object>>> ClassFixtureFactories { get; set; }
 		public required IReadOnlyDictionary<Type, Func<FixtureMappingManager?, ValueTask<object>>> CollectionFixtureFactories { get; set; }
 		public required bool DisableParallelization { get; set; }
-		public required bool EnableTestCaseParallelization { get; set; }
+		public required ParallelizationOptions ParallelizationOptions { get; set; }
 		public required ICodeGenTestAssembly TestAssembly { get; set; }
 		public required ITestCaseOrderer? TestCaseOrderer { get; set; }
 		public required ITestClassOrderer? TestClassOrderer { get; set; }

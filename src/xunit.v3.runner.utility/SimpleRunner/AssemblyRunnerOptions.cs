@@ -324,38 +324,21 @@ public class AssemblyRunnerOptions
 			ProjectAssembly.Configuration.ParallelAlgorithm = value;
 		}
 	}
-
-	/// <summary>
-	/// Indicates whether to run test collections in parallel.
-	/// </summary>
-	/// <remarks>
-	/// <em>Parallelized test collections are only valid for xUnit.net v2 and xUnit.net v3 test projects.</em>
-	/// </remarks>
-	public bool? ParallelizeTestCollections
-	{
-		get => ProjectAssembly.Configuration.ParallelizeTestCollections;
-		set
-		{
-			GuardMinimumXunitVersion(2, value, nameof(ParallelizeTestCollections));
-
-			ProjectAssembly.Configuration.ParallelizeTestCollections = value;
-		}
-	}
-
+	
 	/// <summary>
 	/// Indicates whether to run all test cases in parallel.
 	/// </summary>
 	/// <remarks>
 	/// <em>Parallelized test cases are only valid for xUnit.net v3 test projects.</em>
 	/// </remarks>
-	public bool? ParallelizeTestCases
+	public ParallelizationOptions? ParallelizationOptions
 	{
-		get => ProjectAssembly.Configuration.ParallelizeTestCases;
+		get => ProjectAssembly.Configuration.ParallelizationOptions;
 		set
 		{
-			GuardMinimumXunitVersion(3, value, nameof(ParallelizeTestCases));
+			GuardMinimumXunitVersion(3, value, nameof(ParallelizationOptions));
 
-			ProjectAssembly.Configuration.ParallelizeTestCases = value;
+			ProjectAssembly.Configuration.ParallelizationOptions = value;
 		}
 	}
 

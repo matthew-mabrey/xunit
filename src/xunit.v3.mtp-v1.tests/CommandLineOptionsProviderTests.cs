@@ -291,17 +291,17 @@ public class CommandLineOptionsProviderTests
 		}
 
 		[Theory]
-		[InlineData("none", false)]
-		[InlineData("collections", true)]
+		[InlineData("none", ParallelizationOptions.Disabled)]
+		[InlineData("collections", ParallelizationOptions.Collections)]
 		public void Parallel(
 			string argValue,
-			bool expected)
+			ParallelizationOptions expected)
 		{
 			commandLineOptions.Set("parallel", [argValue]);
 
 			CommandLineOptionsProvider.Parse(configuration, commandLineOptions, projectAssembly);
 
-			Assert.Equal(expected, projectAssembly.Configuration.ParallelizeTestCollections);
+			Assert.Equal(expected, projectAssembly.Configuration.ParallelizationOptions);
 		}
 
 		[Theory]

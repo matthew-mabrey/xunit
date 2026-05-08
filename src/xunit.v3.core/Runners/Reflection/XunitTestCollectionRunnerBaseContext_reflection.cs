@@ -14,7 +14,7 @@ namespace Xunit.v3;
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="assemblyFixtureMappings">The fixtures associated with the test assembly</param>
-/// <param name="enableTestCaseParallelization">A value indicating whether test cases can be run in parallel.</param>
+/// <param name="parallelizationOptions">A value indicating whether test cases can be run in parallel.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
 /// </remarks>
@@ -26,14 +26,14 @@ public abstract class XunitTestCollectionRunnerBaseContext<TTestCollection, TTes
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
 	FixtureMappingManager assemblyFixtureMappings,
-	bool enableTestCaseParallelization) :
-		CoreTestCollectionRunnerContext<TTestCollection, TTestClass, TTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, enableTestCaseParallelization, cancellationTokenSource)
+	ParallelizationOptions parallelizationOptions) :
+		CoreTestCollectionRunnerContext<TTestCollection, TTestClass, TTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, parallelizationOptions, cancellationTokenSource)
 			where TTestCollection : class, IXunitTestCollection
 			where TTestClass : class, IXunitTestClass
 			where TTestCase : class, IXunitTestCase
 {
 	/// <summary>
-	/// Please use <see cref="XunitTestCollectionRunnerBaseContext(TTestCollection, IReadOnlyCollection{TTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager, bool)"/>.
+	/// Please use <see cref="XunitTestCollectionRunnerBaseContext(TTestCollection, IReadOnlyCollection{TTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager, ParallelizationOptions)"/>.
 	/// This overload will be removed in the next major version.
 	/// </summary>
 	[Obsolete("Please use the constructor which accepts testClassOrderer and testMethodOrderer. This overload will be removed in the next major version.")]
@@ -56,7 +56,7 @@ public abstract class XunitTestCollectionRunnerBaseContext<TTestCollection, TTes
 				aggregator,
 				cancellationTokenSource,
 				assemblyFixtureMappings,
-				enableTestCaseParallelization: false
+				parallelizationOptions: ParallelizationOptions.Default
 			)
 	{ }
 

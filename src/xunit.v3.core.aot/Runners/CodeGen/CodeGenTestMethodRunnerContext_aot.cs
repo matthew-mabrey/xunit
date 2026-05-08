@@ -20,7 +20,7 @@ public class CodeGenTestMethodRunnerContext(
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
 	FixtureMappingManager classFixtureMappings) :
-		CoreTestMethodRunnerContext<ICodeGenTestMethod, ICodeGenTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, enableTestCaseParallelization: false, cancellationTokenSource)
+		CoreTestMethodRunnerContext<ICodeGenTestMethod, ICodeGenTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, parallelizationOptions: ParallelizationOptions.Default, cancellationTokenSource)
 {
 	/// <inheritdoc/>
 	public override ValueTask<RunSummary> RunTestCase(ICodeGenTestCase testCase) =>

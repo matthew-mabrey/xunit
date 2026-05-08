@@ -1,3 +1,5 @@
+using Xunit.v3;
+
 namespace Xunit.Sdk;
 
 /// <summary>
@@ -221,31 +223,14 @@ public static class TestFrameworkOptionsReadExtensions
 		DiagnosticMessages(executionOptions) ?? false;
 
 	/// <summary>
-	/// Gets a flag to disable parallelization.
-	/// </summary>
-	public static bool? DisableParallelization(this ITestFrameworkExecutionOptions executionOptions)
-	{
-		Guard.ArgumentNotNull(executionOptions);
-
-		return executionOptions.GetValue<bool?>(TestOptionsNames.Execution.DisableParallelization);
-	}
-
-	/// <summary>
 	/// Gets a flag indicating whether to enable test case parallelization within all test collections by default.
 	/// </summary>
-	public static bool? EnableTestCaseParallelization(this ITestFrameworkExecutionOptions executionOptions)
+	public static ParallelizationOptions? ParallelizationOptions(this ITestFrameworkExecutionOptions executionOptions)
 	{
 		Guard.ArgumentNotNull(executionOptions);
 
-		return executionOptions.GetValue<bool?>(TestOptionsNames.Execution.EnableTestCaseParallelization);
+		return executionOptions.GetValue<ParallelizationOptions?>(TestOptionsNames.Execution.ParallelizationOptions);
 	}
-
-	/// <summary>
-	/// Gets a flag to disable parallelization. If the flag is not present, returns the
-	/// default value (<see langword="false"/>).
-	/// </summary>
-	public static bool DisableParallelizationOrDefault(this ITestFrameworkExecutionOptions executionOptions) =>
-		DisableParallelization(executionOptions) ?? false;
 
 	/// <summary>
 	/// Gets a flag that indicates how to handle explicit tests.

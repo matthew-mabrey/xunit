@@ -11,7 +11,7 @@ public class XunitTestCollectionTests
 	{
 		var collectionDefinitions = new Dictionary<string, (Type, CollectionDefinitionAttribute)> { ["foo"] = (typeof(BeforeAfterCollection), new CollectionDefinitionAttribute()) };
 		var testAssembly = Mocks.XunitTestAssembly(beforeAfterTestAttributes: [new BeforeAfterOnAssembly()], collectionDefinitions: collectionDefinitions);
-		testCollection = new XunitTestCollection(testAssembly, typeof(MyCollection), disableParallelization: true, enableTestCaseParallelization: true, "display name");
+		testCollection = new XunitTestCollection(testAssembly, typeof(MyCollection), parallelizationOptions: Xunit.Sdk.ParallelizationOptions.Disabled, "display name");
 	}
 
 	[Fact]
@@ -53,19 +53,11 @@ public class XunitTestCollectionTests
 	}
 
 	[Fact]
-	public void DisableParallelization()
+	public void ParallelizationOptions()
 	{
-		var disableParallelization = testCollection.DisableParallelization;
+		var parallelizationOptions = testCollection.ParallelizationOptions;
 
-		Assert.True(disableParallelization);
-	}
-
-	[Fact]
-	public void EnableTestCaseParallelization()
-	{
-		var enableTestCaseParallelization = testCollection.EnableTestCaseParallelization;
-
-		Assert.True(enableTestCaseParallelization);
+		Assert.Equal(Xunit.Sdk.ParallelizationOptions.Disabled, parallelizationOptions);
 	}
 
 	[Fact]
@@ -82,7 +74,7 @@ public class XunitTestCollectionTests
 		// We can't use the XunitTestCollection backed by mocks because they don't serialize, so we'll create
 		// one here that's backed by an actual XunitTestAssembly object.
 		var testAssembly = TestData.XunitTestAssembly<ClassUnderTest>();
-		var testCollection = new XunitTestCollection(testAssembly, typeof(MyCollection), disableParallelization: true, enableTestCaseParallelization: true, "display name");
+		var testCollection = new XunitTestCollection(testAssembly, typeof(MyCollection), parallelizationOptions: Xunit.Sdk.ParallelizationOptions.Disabled, "display name");
 
 		var serialized = SerializationHelper.Instance.Serialize(testCollection);
 		var deserialized = SerializationHelper.Instance.Deserialize(serialized);
