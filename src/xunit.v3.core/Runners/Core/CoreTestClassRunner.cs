@@ -108,7 +108,7 @@ public class CoreTestClassRunner<TContext, TTestClass, TTestMethod, TTestCase> :
 	{
 		Guard.ArgumentNotNull(ctxt);
 
-		if (!ctxt.TestClass.TestCollection.EnableTestCaseParallelization)
+		if (!ctxt.EnableTestCaseParallelization)
 		{
 			return await base.RunTestMethods(ctxt, exception);
 		}

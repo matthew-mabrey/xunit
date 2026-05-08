@@ -38,7 +38,7 @@ public class CoreTestCaseRunner<TContext, TTestCase, TTest> : TestCaseRunner<TCo
 		}
 
 		var summary = new RunSummary();
-		if (ctxt.TestCase.TestCollection.EnableTestCaseParallelization)
+		if (ctxt.EnableTestCaseParallelization)
 		{
 			var taskRunner = TestPipelineTaskRunner.Create(ctxt.CancellationTokenSource.Token);
 			List<ValueTask<RunSummary>> parallel = [];

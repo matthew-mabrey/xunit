@@ -12,4 +12,8 @@
     <Compile Include="..\xunit.v3.acceptance.aot.tests\**\*.cs" Exclude="**\obj\**\*.cs;**\*_aot.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+  </ItemGroup>
+
 </Project>

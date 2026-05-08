@@ -27,7 +27,7 @@ public class XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>(
 	object?[] constructorArguments,
 	bool enableTestCaseParallelization,
 	SemaphoreSlim? parallelizationSemaphore) :
-		CoreTestMethodRunnerContext<TTestMethod, TTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
+		CoreTestMethodRunnerContext<TTestMethod, TTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, enableTestCaseParallelization, cancellationTokenSource)
 			where TTestMethod : class, IXunitTestMethod
 			where TTestCase : class, IXunitTestCase
 {
@@ -49,7 +49,7 @@ public class XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>(
 			Aggregator.Clone(),
 			ExplicitOption,
 			ConstructorArguments,
-			enableTestCaseParallelization,
+			EnableTestCaseParallelization,
 			parallelizationSemaphore
 		);
 	}

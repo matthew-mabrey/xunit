@@ -10,6 +10,7 @@ namespace Xunit.v3;
 /// <param name="explicitOption">The user's choice on how to treat explicit tests</param>
 /// <param name="messageBus">The message bus to send execution messages to</param>
 /// <param name="aggregator">The exception aggregator</param>
+/// <param name="enableTestCaseParallelization">A value indicating whether test cases can be run in parallel.</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <typeparam name="TTestMethod">The type of the test method used by the test framework. Must
 /// derive from <see cref="ICoreTestMethod"/>.</typeparam>
@@ -24,11 +25,17 @@ public abstract class CoreTestMethodRunnerContext<TTestMethod, TTestCase>(
 	ExplicitOption explicitOption,
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
+	bool enableTestCaseParallelization,
 	CancellationTokenSource cancellationTokenSource) :
 		TestMethodRunnerContext<TTestMethod, TTestCase>(testMethod, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
 			where TTestMethod : class, ICoreTestMethod
 			where TTestCase : class, ICoreTestCase
 {
+	/// <summary>
+	/// Gets a value indicating whether test cases should be run in parallel.
+	/// </summary>
+	public bool EnableTestCaseParallelization => enableTestCaseParallelization;
+	
 	/// <summary>
 	/// Runs a test case from this test method.
 	/// </summary>

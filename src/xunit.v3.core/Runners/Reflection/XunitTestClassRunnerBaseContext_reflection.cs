@@ -27,7 +27,7 @@ public abstract class XunitTestClassRunnerBaseContext<TTestClass, TTestMethod, T
 	FixtureMappingManager collectionFixtureMappings,
 	bool enableTestCaseParallelization,
 	SemaphoreSlim? parallelizationSemaphore) :
-		CoreTestClassRunnerContext<TTestClass, TTestMethod, TTestCase>(testClass, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
+		CoreTestClassRunnerContext<TTestClass, TTestMethod, TTestCase>(testClass, testCases, explicitOption, messageBus, aggregator, enableTestCaseParallelization, cancellationTokenSource)
 			where TTestClass : class, IXunitTestClass
 			where TTestMethod : class, IXunitTestMethod
 			where TTestCase : class, IXunitTestCase
@@ -59,7 +59,7 @@ public abstract class XunitTestClassRunnerBaseContext<TTestClass, TTestMethod, T
 				Aggregator.Clone(),
 				CancellationTokenSource,
 				ConstructorArguments ?? throw new InvalidOperationException("Constructor arguments were not set"),
-				enableTestCaseParallelization,
+				EnableTestCaseParallelization,
 				parallelizationSemaphore
 			);
 }

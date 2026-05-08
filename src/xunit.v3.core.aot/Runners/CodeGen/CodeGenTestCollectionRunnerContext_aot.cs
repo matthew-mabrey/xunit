@@ -29,6 +29,7 @@ public class CodeGenTestCollectionRunnerContext(
 			explicitOption,
 			messageBus,
 			aggregator,
+			enableTestCaseParallelization: false,
 			cancellationTokenSource
 		)
 {

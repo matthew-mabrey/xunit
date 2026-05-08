@@ -108,11 +108,6 @@ public abstract class CoreTestAssemblyRunner<TContext, TTestAssembly, TTestColle
 
 		foreach (var (collection, testCases) in OrderTestCollections(ctxt))
 		{
-			if (ctxt.EnableTestCaseParallelization.HasValue)
-			{
-				collection.EnableTestCaseParallelization = ctxt.EnableTestCaseParallelization.Value;
-			}
-			
 			ValueTask<RunSummary> task() => RunTestCollection(ctxt, collection, testCases);
 			if (collection.DisableParallelization)
 				(nonParallel ??= []).Add(task);

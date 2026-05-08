@@ -75,8 +75,7 @@ public class CoreTestMethodRunner<TContext, TTestMethod, TTestCase> : TestMethod
 	{
 		Guard.ArgumentNotNull(ctxt);
 
-		// TODO: Switch this to be passed down via Context
-		if (!ctxt.TestMethod.TestClass.TestCollection.EnableTestCaseParallelization)
+		if (!ctxt.EnableTestCaseParallelization)
 		{
 			return await base.RunTestCases(ctxt, exception);
 		}

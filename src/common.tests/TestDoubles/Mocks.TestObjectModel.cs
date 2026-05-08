@@ -440,7 +440,7 @@ partial class Mocks
 				TestMethodReturnTypeVSTest = testMethodReturnTypeVSTest,
 				Timeout = timeout,
 				Traits = traits ?? TestData.DefaultTraits,
-				UniqueID = uniqueID,
+				UniqueID = uniqueID
 			};
 
 	class MockCoreTestCase(

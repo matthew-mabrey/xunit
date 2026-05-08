@@ -14,6 +14,7 @@ namespace Xunit.v3;
 /// <param name="aggregator">The exception aggregator</param>
 /// <param name="cancellationTokenSource">The cancellation token source</param>
 /// <param name="assemblyFixtureMappings">The fixtures associated with the test assembly</param>
+/// <param name="enableTestCaseParallelization">A value indicating whether test cases can be run in parallel.</param>
 /// <remarks>
 /// This class is used for reflection-based tests.
 /// </remarks>
@@ -24,14 +25,15 @@ public abstract class XunitTestCollectionRunnerBaseContext<TTestCollection, TTes
 	IMessageBus messageBus,
 	ExceptionAggregator aggregator,
 	CancellationTokenSource cancellationTokenSource,
-	FixtureMappingManager assemblyFixtureMappings) :
-		CoreTestCollectionRunnerContext<TTestCollection, TTestClass, TTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, cancellationTokenSource)
+	FixtureMappingManager assemblyFixtureMappings,
+	bool enableTestCaseParallelization) :
+		CoreTestCollectionRunnerContext<TTestCollection, TTestClass, TTestCase>(testCollection, testCases, explicitOption, messageBus, aggregator, enableTestCaseParallelization, cancellationTokenSource)
 			where TTestCollection : class, IXunitTestCollection
 			where TTestClass : class, IXunitTestClass
 			where TTestCase : class, IXunitTestCase
 {
 	/// <summary>
-	/// Please use <see cref="XunitTestCollectionRunnerBaseContext(TTestCollection, IReadOnlyCollection{TTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager)"/>.
+	/// Please use <see cref="XunitTestCollectionRunnerBaseContext(TTestCollection, IReadOnlyCollection{TTestCase}, ExplicitOption, IMessageBus, ExceptionAggregator, CancellationTokenSource, FixtureMappingManager, bool)"/>.
 	/// This overload will be removed in the next major version.
 	/// </summary>
 	[Obsolete("Please use the constructor which accepts testClassOrderer and testMethodOrderer. This overload will be removed in the next major version.")]
@@ -53,7 +55,8 @@ public abstract class XunitTestCollectionRunnerBaseContext<TTestCollection, TTes
 				messageBus,
 				aggregator,
 				cancellationTokenSource,
-				assemblyFixtureMappings
+				assemblyFixtureMappings,
+				enableTestCaseParallelization: false
 			)
 	{ }
 
